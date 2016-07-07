@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	<report>
+		<name>report1</name>
+		<desc>根据用户手机号展示</desc>
+		<sql>
+			<![CDATA[
+				select * from ${table} where query_date between ${startDate} and ${endDate} and bill_id=${billId}
+			]]>
+		</sql>
+	</report>
+	<report>
+		<name>report2</name>
+		<desc>根据成功状态展示</desc>
+		<sql>
+			<![CDATA[
+				select * from ${table} where query_date between ${startDate} and ${endDate} and is_success=0
+			]]>
+		</sql>
+	</report>
+	<report>
+		<name>report3</name>
+		<desc>根据成功状态分组展示</desc>
+		<sql>
+			<![CDATA[
+				select is_Success,count(*) count from ${table} where query_date between ${startDate} and ${endDate} group by is_success
+			]]>
+		</sql>
+	</report>
+	<report>
+		<name>report4</name>
+		<desc>根据opID、成功状态分组展示</desc>
+		<sql>
+			<![CDATA[select op_Id,is_Success,count(*) count from ${table} where query_date between ${startDate} and ${endDate} group by op_id,is_success]]>
+		</sql>
+	</report>
+	<report>
+		<name>report5</name>
+		<desc>根据接口类型、成功状态分组展示</desc>
+		<sql>
+			<![CDATA[select interface_Type,is_Success,count(*) count from ${table} where query_date between ${startDate} and ${endDate} group by interface_type,is_Success]]>
+		</sql>
+	</report>
+	<report>
+		<name>report6</name>
+		<desc>根据regionCode、成功状态分组展示</desc>
+		<sql>
+			<![CDATA[select region_Code,is_Success,count(*) count from ${table} where query_date between ${startDate} and ${endDate} group by region_Code,is_Success]]>
+		</sql>
+	</report>
+	<report>
+		<name>report7</name>
+		<desc>根据queryType、成功状态分组展示</desc>
+		<sql>
+			<![CDATA[select query_Type,is_Success,count(*) count from ${table} where query_date between ${startDate} and ${endDate} group by query_Type,is_Success]]>
+		</sql>
+	</report>
+</config>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ailk.oci:ocnosql-client:V01B09C00-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/repo/com/ailk/oci/ocnosql-client/V01B09C00-SNAPSHOT/ocnosql-client-V01B09C00-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/repo/com/ailk/oci/ocnosql-client/V01B09C00-SNAPSHOT/ocnosql-client-V01B09C00-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/repo/com/ailk/oci/ocnosql-client/V01B09C00-SNAPSHOT/ocnosql-client-V01B09C00-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
