@@ -31,6 +31,8 @@
    		</global-results>
    		<action name="menu" class="com.ailk.web.MenuAction">
         </action>
+        <action name="rowkeyQuery" class="com.ailk.web.RowkeyQueryAction">
+        </action>
 	</package>
 	
 	

@@ -20,4 +20,13 @@ public class ValueSet extends HashMap{
 			return Long.parseLong(getString(name));
 		}
 	}
+
+    public int getInt(Object name) {
+        Object value = this.get(name);
+        if(value instanceof Integer){
+            return (Integer) value;
+        }else{
+            return Integer.parseInt(getString(name));
+        }
+    }
 }

@@ -1,8 +1,12 @@
 package com.ailk.core.base.action;
 
+import com.ailk.model.ValueSet;
 import com.opensymphony.xwork2.ActionSupport;
 
-public class BaseAction extends ActionSupport{
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+
+public class BaseAction extends ActionSupport {
 
 	protected static String AJAXRTN = "ajax_rtn";
 	protected String ajaxStr;
@@ -32,6 +36,14 @@ public class BaseAction extends ActionSupport{
 	public void setLimit(String limit) {
 		this.limit = limit;
 	}
+
+    public void bindParams(ValueSet vs, HttpServletRequest request){
+        Enumeration e = request.getParameterNames();
+        while(e.hasMoreElements()){
+            String name = (String) e.nextElement();
+            vs.put(name, request.getParameter(name));
+        }
+    }
 	
 	
 }
