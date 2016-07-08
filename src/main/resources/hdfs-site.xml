@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<property>
+  <name>dfs.nameservices</name>
+  <value>wangkai8</value>
+  <description>
+    Comma-separated list of nameservices.
+  </description>
+</property>
+
+<property>
+  <name>dfs.datanode.address</name>
+  <value>0.0.0.0:50011</value>
+  <description>
+    The datanode server address and port for data transfer.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+
+<property>
+  <name>dfs.datanode.http.address</name>
+  <value>0.0.0.0:50076</value>
+  <description>
+    The datanode http server address and port.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+
+<property>
+  <name>dfs.datanode.ipc.address</name>
+  <value>0.0.0.0:50021</value>
+  <description>
+    The datanode ipc server address and port.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+
+<!--<property>
+  <name>dfs.ha.namenodes.ochadoopcluster</name>
+  <value>nn1,nn2</value>
+<description></description>
+</property>-->
+
+<property>
+  <name>dfs.namenode.name.dir</name>
+  <value>file:///Users/wangkai8/app/data/dfs-2.6.0/name</value>
+  <description>Determines where on the local filesystem the DFS name node should store the name table.If this is a comma-delimited list of directories,then name table is replicated in all of the directories,for redundancy.</description>
+  <final>true</final>
+ </property>
+ 
+ <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>file:///Users/wangkai8/app/data/dfs-2.6.0/data</value>
+    <description>Determines where on the local filesystem an DFS data node should store its blocks.If this is a comma-delimited list of directories,then data will be stored in all named directories,typically on different devices.Directories that do not exist are ignored.
+    </description>
+    <final>true</final>
+ </property>
+
+ <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+ </property>
+ 
+ <property>
+    <name>dfs.permission</name>
+    <value>false</value>
+ </property>
+
+<property>
+  <name>dfs.datanode.hdfs-blocks-metadata.enabled</name>
+  <value>true</value>
+  <description>
+    Boolean which enables backend datanode-side support for the experimental DistributedFileSystem#getFileVBlockStorageLocations API.
+  </description>
+</property>
+
+<property>
+  <name>dfs.permissions.enabled</name>
+  <value>false</value>
+  <description>
+    If "true", enable permission checking in HDFS.
+    If "false", permission checking is turned off,
+    but all other behavior is unchanged.
+    Switching from one parameter value to the other does not change the mode,
+    owner or group of files or directories.
+  </description>
+</property>
+<!--
+<property>
+  <name>dfs.namenode.rpc-address.ochadoopcluster.nn1</name>
+  <value>ochadoop151:8030</value>
+  <description>½ڵã1µÄPCµØ·</description>
+</property>
+
+<property>
+  <name>dfs.namenode.rpc-address.ochadoopcluster.nn2</name>
+  <value>ochadoop152:8030</value>
+  <description>½ڵã2µÄPCµØ·</description>
+</property>
+
+<property>
+  <name>dfs.namenode.http-address.ochadoopcluster.nn1</name>
+  <value>ochadoop151:50082</value>
+  <description>½ڵã1µÄTTPµØ·</description>
+</property>
+
+<property>
+  <name>dfs.namenode.http-address.ochadoopcluster.nn2</name>
+  <value>ochadoop152:50082</value>
+  <description>½ڵã2µÄTTPµØ·</description>
+</property>
+
+<property>
+  <name>dfs.namenode.shared.edits.dir</name>
+  <value>qjournal://ochadoop151:8488;ochadoop152:8488;ochadoop153:8488/ochadoopcluster</value>
+  <description>ÎÃ²ÉÃ¸örnalnode½ڵã´¢ԪÊ¾ݣ¬ÕÊËÃµÄPÓ¶˿Ú/description>
+</property>
+-->
+<property>
+  <name>dfs.namenode.edits.dir</name>
+  <value>/Users/wangkai8/app/data/dfs-2.6.0/edits</value>
+  <description>Determines where on the local filesystem the DFS name node
+      should store the transaction (edits) file. If this is a comma-delimited list
+      of directories then the transaction file is replicated in all of the 
+      directories, for redundancy. Default value is same as dfs.namenode.name.dir
+  </description>
+</property>
+
+<property>
+  <name>dfs.namenode.handler.count</name>
+  <value>50</value>
+  <description>The number of server threads for the namenode.</description>
+</property>
+<!--
+<property>
+  <name>dfs.journalnode.edits.dir</name>
+  <value>/data1/ochadoop/journaldata/jn</value>
+  <description>journaldataµĴ洢·¾¶</description>
+</property>
+
+<property>
+  <name>dfs.journalnode.rpc-address</name>
+  <value>0.0.0.0:8488</value>
+</property>
+
+<property>
+  <name>dfs.journalnode.http-address</name>
+  <value>0.0.0.0:8483</value>
+</property>
+
+<property>
+  <name>dfs.client.failover.proxy.provider.ochadoopcluster</name>
+  <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+  <description>¸Ãà4Å¶Ïĸöenode´¦ÓÉЧ״̬</description>
+</property>
+
+<property>
+  <name>dfs.ha.fencing.methods</name>
+  <value>shell(/bin/true)</value>
+</property>
+
+<property>
+  <name>dfs.ha.fencing.ssh.connect-timeout</name>
+  <value>10000</value>
+</property>
+
+<property>
+  <name>dfs.ha.automatic-failover.enabled</name>
+  <value>true</value>
+  <description>
+    Whether automatic failover is enabled. See the HDFS High
+    Availability documentation for details on automatic HA
+    configuration.
+  </description>
+</property>
+
+<property>
+  <name>ha.zookeeper.quorum</name>
+  <value>ochadoop151:2181,ochadoop152:2181,ochadoop153:2181</value>
+  <description>3¸ökeeper½ڵãdescription>
+</property>
+-->
+<property>
+  <name>dfs.datanode.max.xcievers</name>
+  <value>4096</value>
+</property>
+
+<property>
+  <name>dfs.datanode.max.transfer.threads</name>
+  <value>4096</value>
+  <description>
+        Specifies the maximum number of threads to use for transferring data
+        in and out of the DN.
+  </description>
+</property>
+
+<property>
+  <name>dfs.blocksize</name>
+  <value>64m</value>
+  <description>
+      The default block size for new files, in bytes.
+      You can use the following suffix (case insensitive):
+      k(kilo), m(mega), g(giga), t(tera), p(peta), e(exa) to specify the size (such as 128k, 512m, 1g, etc.),
+      Or provide complete size in bytes (such as 134217728 for 128 MB).
+  </description>
+</property>
+
+<property>
+  <name>dfs.namenode.handler.count</name>
+  <value>30</value>
+  <description>The number of server threads for the namenode.</description>
+</property>
+
+<property>
+  <name>dfs.datanode.du.reserved</name>
+  <value>10737418240</value>
+  <description>Reserved space in bytes per volume. Always leave this much space free for non dfs use.
+  </description>
+</property>
+
+<!-- configurations for nnbench -->
+<property>
+  <name>dfs.namenode.fs-limits.min-block-size</name>
+  <value>1</value>
+  <description>Minimum block size in bytes, enforced by the Namenode at create
+      time. This prevents the accidental creation of files with tiny block
+      sizes (and thus many blocks), which can degrade
+      performance.</description>
+</property>
+
+<property>
+    <name>dfs.namenode.fs-limits.max-blocks-per-file</name>
+    <value>1048576</value>
+    <description>Maximum number of blocks per file, enforced by the Namenode on
+        write. This prevents the creation of extremely large files which can
+        degrade performance.</description>
+</property>
+
+<property>
+  <name>dfs.datanode.balance.bandwidthPerSec</name>
+  <value>104857600</value>
+  <description>
+        Specifies the maximum amount of bandwidth that each datanode
+        can utilize for the balancing purpose in term of
+        the number of bytes per second.
+  </description>
+</property>
+<!--
+<property>
+  <name>dfs.hosts.exclude</name>
+  <value>/home/ochadoop/app/hadoop/etc/hadoop/excludes</value>
+  <description>Names a file that contains a list of hosts that are
+  not permitted to connect to the namenode.  The full pathname of the
+  file must be specified.  If the value is empty, no hosts are
+  excluded.</description>
+</property>
+-->
+<property>
+  <name>dfs.image.compress</name>
+  <value>false</value>
+  <description>Should the dfs image be compressed?
+  </description>
+</property>
+
+<property>
+  <name>dfs.image.compression.codec</name>
+  <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+  <description>If the dfs image is compressed, how should they be compressed?
+               This has to be a codec defined in io.compression.codecs.
+  </description>
+</property>
+
+<property>
+  <name>dfs.image.transfer.timeout</name>
+  <value>60000</value>
+  <description>
+        Socket timeout for image transfer in milliseconds. This timeout and the related
+        dfs.image.transfer.bandwidthPerSec parameter should be configured such
+        that normal image transfer can complete successfully.
+        This timeout prevents client hangs when the sender fails during
+        image transfer. This is socket timeout during image tranfer.
+  </description>
+</property>
+
+<property>
+  <name>dfs.image.transfer.bandwidthPerSec</name>
+  <value>4194304</value>
+  <description>
+        Maximum bandwidth used for image transfer in bytes per second.
+        This can help keep normal namenode operations responsive during
+        checkpointing. The maximum bandwidth and timeout in
+        dfs.image.transfer.timeout should be set such that normal image
+        transfers can complete successfully.
+        A default value of 0 indicates that throttling is disabled.
+  </description>
+</property>
+
+<property>
+  <name>dfs.image.transfer.chunksize</name>
+  <value>65536</value>
+  <description>
+        Chunksize in bytes to upload the checkpoint.
+        Chunked streaming is used to avoid internal buffering of contents
+        of image file of huge size.
+  </description>
+</property>
+
+<property>
+  <name>dfs.datanode.max.locked.memory</name>
+  <!--<value>268435456</value>-->
+  <value>0</value>
+  <description>
+    The amount of memory in bytes to use for caching of block replicas in
+    memory on the datanode. The datanode's maximum locked memory soft ulimit
+    (RLIMIT_MEMLOCK) must be set to at least this value, else the datanode
+    will abort on startup.
+
+    By default, this parameter is set to 0, which disables in-memory caching.
+
+    If the native libraries are not available to the DataNode, this
+    configuration has no effect.
+  </description>
+</property>
+
+<property>
+  <name>dfs.namenode.edits.noeditlogchannelflush</name>
+  <value>true</value>
+  <description>
+    Specifies whether to flush edit log file channel. When set, expensive
+    FileChannel#force calls are skipped and synchronous disk writes are
+    enabled instead by opening the edit log file with RandomAccessFile("rws")
+    flags. This can significantly improve the performance of edit log writes
+    on the Windows platform.
+    Note that the behavior of the "rws" flags is platform and hardware specific
+    and might not provide the same level of guarantees as FileChannel#force.
+    For example, the write will skip the disk-cache on SAS and SCSI devices
+    while it might not on SATA devices. This is an expert level setting,
+    change with caution.
+  </description>
+</property>
+
+<property>
+  <name>dfs.client.socket-timeout</name>
+  <value>300000</value>
+  <description></description>
+</property>
+
+<property>
+  <name>dfs.datanode.synconclose</name>
+  <value>true</value>
+  <description></description>
+</property>
+<property>
+      <name>hadoop.proxyuser.wangkai8.groups</name>
+      <value>*</value>
+      <description>Allow the superuser oozie to impersonate any members of the group group1 and group2</description>
+ </property>
+<property>
+      <name>hadoop.proxyuser.wangkai8.hosts</name>
+      <value>*</value>
+      <description>The superuser can connect only from host1 and host2 to impersonate a user</description>
+  </property>
+</configuration>
+
+
+
