@@ -2,10 +2,16 @@ package com.ailk.core.base.action;
 
 import com.ailk.model.ValueSet;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
+
+//@Results({
+//        @Result(name="ajax_rtn", location="/common/ajaxrtn.jsp")
+//})
 public class BaseAction extends ActionSupport {
 
 	protected static String AJAXRTN = "ajax_rtn";

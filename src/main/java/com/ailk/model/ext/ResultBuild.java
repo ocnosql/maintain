@@ -68,22 +68,38 @@ public class ResultBuild {
 	public static JsonResult buildResult(String[] fields, List<Map> records, long totalCount){
 		JsonResult result = new JsonResult();
 		MetaData meta = new MetaData();
+        Map<String, String> mapping = new LinkedHashMap<String, String>(fields.length);
+        int index = 0;
 		for(String fld : fields){
 			Map field = new HashMap();
-			field.put("name", fld);
+//			field.put("name", fld);
+            field.put("name", "C" + index + "");
 			field.put("type", "string");
 			meta.getFields().add(field);
+            mapping.put(fld, "C" + index + "");
+            index ++;
 		}
+        List<Map> recordsCopy = new ArrayList<Map>(records.size());
+
+        for(Map record : records) {
+            Map recordCopy = new LinkedHashMap(record.size());
+            for(Map.Entry entry : mapping.entrySet()) {
+                recordCopy.put(entry.getValue(), record.get(entry.getKey()));
+            }
+            recordsCopy.add(recordCopy);
+        }
+
+
 		result.setMetaData(meta);
 		result.setTotal(totalCount);
-		result.getRecords().addAll(records);
+		result.getRecords().addAll(recordsCopy);
 		
 		for(int i=0; i < fields.length; i++){
 			String fld = fields[i];
 			Map column = new LinkedHashMap();
 			//column.put("header", i + "_" + fld);
 			column.put("header", fld);
-			column.put("dataIndex", fld);
+			column.put("dataIndex", mapping.get(fld));
 			column.put("width", fld.length() < 15 ? 120 : fld.length() * 10);
 			column.put("sortable", true);
 			result.getColumns().add(column);
@@ -125,7 +141,9 @@ public class ResultBuild {
 		String[] fields = new String[record.keySet().size()];
 		int i = 0;
 		while(it.hasNext()){
-			fields[i] = (String)it.next();
+            String columnName = (String)it.next();
+            //extjs无法处理列名中带.的列
+            fields[i] = columnName;
 			i ++;
 		}
 		return fields;

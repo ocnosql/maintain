@@ -3,20 +3,16 @@ package com.ailk.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.struts2.convention.annotation.Action;
-
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
+import com.ailk.core.base.action.BaseAction;
+import org.apache.struts2.convention.annotation.*;
 
 import com.ailk.model.ext.Menu;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 
-@Namespace("/test")
-
-@Action(value="menu")
-public class MenuAction extends ActionSupport{
+@ParentPackage("cloud-default")
+@Namespace("/menu")
+public class MenuAction extends BaseAction{
 	/**
 	 * 
 	 */
@@ -40,6 +36,8 @@ public class MenuAction extends ActionSupport{
 		return AJAXRTN;
 	}
 
+
+    @Action(value="menuList")
 	public String menuList(){
 		List<Menu> menuList = new ArrayList<Menu>();
 		

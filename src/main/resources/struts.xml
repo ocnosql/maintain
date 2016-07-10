@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
     
 <struts>
 	<!-- <constant name="struts.action.extension" value="" /> -->
 	<constant name="struts.i18n.encoding" value="utf-8"/>
+    <constant name="struts.convention.package.locators" value="web,action" />
+    <!--<constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>-->
 	
 	 <!--受权限控制的Action请求配置-->
-	<package name="cloud-default" extends="struts-default">
+	<package name="cloud-default" extends="struts-default" strict-method-invocation="false">
 		<interceptors>
 			<interceptor class="com.ailk.AuthorityInterceptor" name="authority" />
 			<!--定义一个包含权限检查的拦截器栈 -->
@@ -20,7 +22,7 @@
 			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="mydefault" />
-	    
+
 		<global-results>
 			<result name="success">/common/success.jsp</result>
 			<result name="error">/common/error.jsp</result>
@@ -29,10 +31,17 @@
             <result name="login">/login.jsp</result>
             <result name="redirect">/common/redirect.jsp</result>
    		</global-results>
-   		<action name="menu" class="com.ailk.web.MenuAction">
+
+        <!-- 定义全局有权限访问方法 -->
+        <!--<global-allowed-methods>execute,input,back,cancel,browse,save,delete,list,index</global-allowed-methods>-->
+
+   		<!--<action name="menu" class="com.ailk.web.MenuAction">-->
+        <!--</action>-->
+        <!--<action name="rowkeyQuery" class="com.ailk.web.RowkeyQueryAction">-->
+        <!--</action>-->
+        <action name="*_*" class="com.ailk.web.{1}" method="{2}">
         </action>
-        <action name="rowkeyQuery" class="com.ailk.web.RowkeyQueryAction">
-        </action>
+
 	</package>
 	
 	

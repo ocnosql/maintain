@@ -81,6 +81,7 @@
 			var password=Ext.getCmp('password').getValue();
 			Ext.Ajax.request({
                 url: appPath + '/login.action',
+//                url: appPath + '/AuthUserAction_execute.action',
                 params: {username: username, password: password },
                 method: 'POST',
                 success: function (response, options) {

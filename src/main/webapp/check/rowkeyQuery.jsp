@@ -31,7 +31,7 @@ var searchPanel = new Ext.FormPanel(
 					autoHeight: true,
 					defaults:{layout: 'form',border:false,columnWidth:.5},
 					items:[
-						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'select * from GPRS_201606',
+						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'select sum(to_number(up_flow))  from GPRS_201606',
 							enableKeyEvents:true,
 							listeners : {
 								keypress : function(obj, e){
@@ -79,12 +79,12 @@ var searchPanel = new Ext.FormPanel(
 var dynamicGrid = new Ext.grid.DynamicGrid({  
     title: '数据展示列表',  
     //renderTo: 'dynamic-grid',  
-    storeUrl: appPath + "/rowkeyQuery!query.action",
+    storeUrl: appPath + "/RowkeyQueryAction_query.action",
     width : '100%',  
     height: 500,  
     rowNumberer: true,  
     //checkboxSelModel: true,  
-    sm: new Ext.grid.CheckboxSelectionModel(),  
+    sm: new Ext.grid.CheckboxSelectionModel(),
     
     bbar : new Ext.PagingToolbar({  
     	//plugins: new Ext.ux.Andrie.pPageSize(), 

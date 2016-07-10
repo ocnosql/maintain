@@ -6,8 +6,6 @@ import com.ailk.service.impl.business.DealTimeMonitorService;
 import com.ailk.service.impl.business.DownLoadMonitorService;
 import com.ailk.service.impl.business.InterfaceMonitorService;
 
-import org.apache.struts2.dispatcher.FilterDispatcher;
-
 public class QueryServiceFactory {
 
 	public static IQueryService getQueryService(String queryType){

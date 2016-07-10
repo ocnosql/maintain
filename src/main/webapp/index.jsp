@@ -56,7 +56,8 @@ var treePanel = new Ext.tree.TreePanel({
 	//iconCls: 'x-panel-header-mytask',
 	rootVisible:true,
 	loader: new Ext.tree.TreeLoader({   
-        dataUrl:'<%=appPath%>/menu!menuList.action' 
+        <%--dataUrl:'<%=appPath%>/menu/menuList.action'--%>
+        dataUrl:'<%=appPath%>/MenuAction_menuList.action'
     }),   
     root: new Ext.tree.AsyncTreeNode({   
         id:'-1',text:'云详单'   
