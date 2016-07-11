@@ -122,15 +122,16 @@ var viewport = new Ext.Viewport({
     });
 
 });
-function onItemCheck(item,flush){
+function onItemCheck(item, flush){
 	url = '<iframe id="' + item.text + '" src="'+item.murl+'" frameborder="0" scrolling="auto" style="border:0px none;width:100%;" height="100%"></iframe>';
-	flush = true;
+//	flush = true;
 	if(flush==true){
 		mainPanel.remove(new Ext.Panel({id:item.text+"tab"}));
 	}
 	
 	var p = mainPanel.add(new Ext.Panel({
-		id:item.text+"tab",
+//		id:item.text+"tab",
+        id: Utils.uuid(),
 		title:item.text,
 		closable: true,
 		autoScroll:true,
