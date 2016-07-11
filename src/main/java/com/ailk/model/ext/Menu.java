@@ -5,28 +5,28 @@ import java.util.List;
 
 public class Menu {
 
-	private Integer id;
+	private String id;
 	private String text;
 	private String cls = "folder";
 	private String murl;
 	//private boolean checked;
 	private boolean leaf;
 	private List<Menu> children = new ArrayList<Menu>();
-	private Integer pid;
+	private String pid;
 	
 	public void addChild(Menu menu){
 		this.children.add(menu);
 	}
 
-	public Integer getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getText() {
+    public String getText() {
 		return text;
 	}
 
@@ -69,14 +69,12 @@ public class Menu {
 		this.murl = murl;
 	}
 
-	public Integer getPid() {
-		return pid;
-	}
+    public String getPid() {
+        return pid;
+    }
 
-	public void setPid(Integer pid) {
-		this.pid = pid;
-	}
-	
-	
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
 }
 

@@ -28,7 +28,7 @@ public class RowkeyQueryAction extends BaseAction {
             long startTime = System.currentTimeMillis();
             ResultDTO dto = service.loadData(vs);
             long endTime = System.currentTimeMillis();
-            LOG.info("query token: " + (endTime - startTime) + "ms");
+            LOG.info("query action complete! token: " + (endTime - startTime) + "ms");
             JsonResult result;
             if(dto.isSuccess()){
                 if(!dto.isHasPaged()) {

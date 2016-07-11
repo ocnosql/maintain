@@ -2,7 +2,7 @@ Ext.grid.DynamicGrid = Ext.extend(Ext.grid.GridPanel, {
     initComponent: function() {  
         //创建store  
         var ds = new Ext.data.Store({  
-            url: this.storeUrl,  
+            url: this.storeUrl,
             reader: new Ext.data.JsonReader()  
         });  
           
