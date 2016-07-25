@@ -34,6 +34,7 @@ public class BaseDao {
 	public List<Map> queryByPage(String sql, long start, long end){
 		String sql_ = "select * from (select rownum row_num, t.*  from (select * from (${sql})  where rownum <=${end}) t) where row_num >${start}";
 		sql_ = sql_.replace("${sql}", sql).replace("${start}", start + "").replace("${end}", end + "");
+		System.out.println(sql_);
 		List<Map> recordList = query(sql_);
 		//log.info("execute query complete! return "+ recordList.size() +" records");
 		return recordList;
@@ -46,6 +47,15 @@ public class BaseDao {
 		long totalCount = 0;
 		List<Map> result = query(sql);
 		totalCount = ((BigDecimal)result.get(0).get("C")).longValue();
+		return totalCount;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public long queryTotalCount2(String sql){
+		sql = "select count(1) C from "+ sql +"";
+		long totalCount = 0;
+		List<Map> result = query(sql);
+		totalCount = Long.parseLong(result.get(0).get("C").toString());
 		return totalCount;
 	}
 	
