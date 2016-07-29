@@ -49,8 +49,16 @@ public class ResultBuild {
 		return gs.toJson(buildResult(records.size() > 0 ? createFieldHeader(records.get(0)) : 
 			new String[0], records, records.size()));
 	}
-	
-	
+
+	public static String buildResult2(List<Map> records,long totalCount){
+		if(records == null){
+			records = new ArrayList<Map>();
+		}
+		Gson gs = new Gson();
+		return gs.toJson(buildResult(records.size() > 0 ? createFieldHeader(records.get(0)) :
+				new String[0], records, totalCount));
+	}
+
 	public static String buildJson(String[] fields, List<String[]> records) {
 		List<Map> list = new ArrayList();
 		for(int i = 0; i < records.size(); i ++) {
@@ -62,6 +70,18 @@ public class ResultBuild {
 		}
 		
 		return buildResult(list);
+	}
+
+	public static String buildJson(String[] fields, List<String[]> records, long totalCount) {
+		List<Map> list = new ArrayList();
+		for(int i = 0; i < records.size(); i ++) {
+			Map map = new LinkedHashMap();
+			for(int j = 0; j < fields.length; j++) {
+				map.put(fields[j], records.get(i)[j]);
+			}
+			list.add(map);
+		}
+		return buildResult2(list, totalCount);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

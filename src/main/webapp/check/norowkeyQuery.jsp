@@ -1,12 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/common/head.jsp"%>
+<%
+	String taskId = request.getParameter("taskId");
+	session.setAttribute("taskId",taskId);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <script>
 Ext.onReady(function(){
-var pageSize = 100;
+var pageSize = 3;
 var gid = null;
 
 /* Ext.Loader.setConfig({enabled: true});
@@ -31,7 +35,7 @@ var searchPanel = new Ext.FormPanel(
 					autoHeight: true,
 					defaults:{layout: 'form',border:false,columnWidth:.5},
 					items:[
-						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'select sum(to_number(up_flow))  from GPRS_201606',
+						{items: [{xtype:'textarea',disabled: true,fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'',
 							enableKeyEvents:true,
 							listeners : {
 								keypress : function(obj, e){
@@ -46,40 +50,25 @@ var searchPanel = new Ext.FormPanel(
 				text:'查询',
 				cls: 'x-icon-btn',
 				handler: function() {
+					<%--alert(${taskId});--%>
                    gid = null;
                    dynamicGrid.store.baseParams.gid = null;
 				   var a = searchPanel.getForm().getValues();
-	               var params = dynamicGrid.store.baseParams; 
+	               var params = dynamicGrid.store.baseParams;
 	               Ext.apply(params, a);
-	               dynamicGrid.store.baseParams = params; 
-	               dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
-                       callback: function(record, options, success){
-                           if(success){
-                               gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
-                               dynamicGrid.store.baseParams.gid = gid;
-                           }
-                       }});
+	               dynamicGrid.store.baseParams = params;
+					initStoreLoad();
 				}
 			}, {
 				text:'导出文本',
 				cls: 'x-icon-btn',
 				handler: function(){
-					if(gid!=null){
-						window.location.href = appPath + "/rowkeyDownload?gid="+gid;
-					}else{
-						Ext.MessageBox.alert('提示', "请先查询，再导出!");
-					}
 					//dynamicGrid.getSelectionModel().selectAll();
 				}
 			},{
 				text:'导出Excel',
 				cls: 'x-icon-btn',
 				handler: function(){
-					if(gid!=null){
-						window.location.href = appPath + "/rowkeyDownload_excel?gid="+gid;
-					}else{
-						Ext.MessageBox.alert('提示', "请先查询，再导出!");
-					}
 					//Utils.copySelectedRows(dynamicGrid);
 				}
 			}]
@@ -89,7 +78,7 @@ var searchPanel = new Ext.FormPanel(
 var dynamicGrid = new Ext.grid.DynamicGrid({  
     title: '数据展示列表',  
     //renderTo: 'dynamic-grid',  
-    storeUrl: appPath + "/RowkeyQueryAction_query.action",
+    storeUrl: appPath + "/NoRowkeyQueryAction_query.action?taskId=${taskId}",
     width : '100%',  
     height: 500,  
     rowNumberer: true,  
@@ -121,6 +110,17 @@ Ext.MyViewport=Ext.extend(Ext.Viewport ,{
 });
 
 var viewport = new Ext.MyViewport();
+	initStoreLoad();
+	function initStoreLoad(){
+		dynamicGrid.store.load({ params:{start: 0,limit: dynamicGrid.getBottomToolbar().pageSize},
+			callback: function(record, options, success){
+				if(success){
+					gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
+					//dynamicGrid.store.baseParams.gid = gid;
+					Ext.getCmp('sql').setValue(gid);
+				}
+			}});
+	}
 
 }); 
 </script>

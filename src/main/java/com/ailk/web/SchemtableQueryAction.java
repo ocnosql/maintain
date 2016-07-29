@@ -5,28 +5,37 @@ import com.ailk.model.ResultDTO;
 import com.ailk.model.ValueSet;
 import com.ailk.model.ext.JsonResult;
 import com.ailk.model.ext.ResultBuild;
-import com.ailk.oci.ocnosql.common.rowkeygenerator.RowKeyGenerator;
-import com.ailk.oci.ocnosql.common.util.MD5Util;
 import com.ailk.service.IQueryService;
 import com.ailk.service.impl.QueryByRowkeyService;
+import com.ailk.service.impl.QuerySchemTableService;
 import com.google.gson.Gson;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import com.ailk.oci.ocnosql.common.rowkeygenerator.MD5RowKeyGenerator;
 
 /**
- * Created by wangkai8 on 16/7/8.
+ * Created by scj on 2016/7/13.
  */
-public class RowkeyQueryAction extends BaseAction {
+public class SchemtableQueryAction extends BaseAction {
 
-    public static final Log LOG = LogFactory.getLog(RowkeyQueryAction.class);
+    public static final Log LOG = LogFactory.getLog(SchemtableQueryAction.class);
 
     public String query(){
-        IQueryService service = new QueryByRowkeyService();
+
+        System.out.println("parameter  tablename = " + ServletActionContext.getRequest().getParameter("tablename"));
+        System.out.println("parameter  tableschem = " + ServletActionContext.getRequest().getParameter("tableschem"));
+
+
+        IQueryService service = new QuerySchemTableService();
         ValueSet vs = new ValueSet();
         bindParams(vs, ServletActionContext.getRequest());
+
+
+
         Gson gs = new Gson();
+
+        System.out.println("vs = " + gs.toJson(vs));
+
         try{
             long startTime = System.currentTimeMillis();
             ResultDTO dto = service.loadData(vs);
@@ -42,14 +51,12 @@ public class RowkeyQueryAction extends BaseAction {
                 if(dto.getExtInfo() != null){
                     result.setExtInfo(dto.getExtInfo());
                 }
-                //String a = gs.toJson(result);
-                //LOG.info("aaaaa==== " +  a);
                 this.setAjaxStr(gs.toJson(result));
             }else{
                 this.setAjaxStr(gs.toJson(ResultBuild.buildFailed(dto.getMessage())));
             }
             long endTime2 = System.currentTimeMillis();
-            //LOG.info("convert records to json token: " + (endTime2 - endTime) + "ms");
+            LOG.info("convert records to json token: " + (endTime2 - endTime) + "ms");
         } catch(Throwable ex){
             LOG.error("查询出现异常", ex);
             this.setAjaxStr(gs.toJson(ResultBuild.buildFailed(ex)));
@@ -57,18 +64,4 @@ public class RowkeyQueryAction extends BaseAction {
         return AJAXRTN;
     }
 
-    public String getmd5(){
-        String rowkey = ServletActionContext.getRequest().getParameter("phoneNum");
-        RowKeyGenerator generator = new MD5RowKeyGenerator();
-        try{
-            if(generator!=null){
-                rowkey = (String) generator.generate(rowkey);
-            }
-            this.setAjaxStr("{\"success\": true, \"rowkey\": \""+ rowkey +"\"}");
-        }catch(Exception e){
-            e.printStackTrace();
-            this.setAjaxStr("{\"success\": false}");
-        }
-        return AJAXRTN;
-    }
 }

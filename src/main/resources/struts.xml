@@ -42,6 +42,27 @@
         <action name="*_*" class="com.ailk.web.{1}" method="{2}">
         </action>
 
+		<action name="batchDownload" class="com.ailk.web.RowkeyBatchOutputQueryAction" method="batchDownload">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="inputName">file</param>
+			</result>
+		</action>
+
+		<action name="rowkeyDownload" class="com.ailk.web.RowkeyOutputQueryAction" method="rowkeyDownload">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="inputName">file</param>
+			</result>
+		</action>
+
+		<action name="rowkeyDownload_excel" class="com.ailk.web.RowkeyOutputQueryAction" method="rowkeyDownload_excel">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="inputName">file</param>
+			</result>
+		</action>
+
 	</package>
 	
 	

@@ -34,8 +34,25 @@ public class BaseDao {
 	public List<Map> queryByPage(String sql, long start, long end){
 		String sql_ = "select * from (select rownum row_num, t.*  from (select * from (${sql})  where rownum <=${end}) t) where row_num >${start}";
 		sql_ = sql_.replace("${sql}", sql).replace("${start}", start + "").replace("${end}", end + "");
+		System.out.println(sql_);
 		List<Map> recordList = query(sql_);
 		//log.info("execute query complete! return "+ recordList.size() +" records");
+		return recordList;
+	}
+
+	public List<Map> queryByPageMysql(String sql, long start, long limit){
+		String sql_="select * from (select @rownumTmep:=@rownumTmep+1 rownum, p.*  from (select @rownumTmep:=0 as rownumTmep ,t.* from (${sql}) t limit ${end}) p) m where rownum>${start}";
+		sql_ = sql_.replace("${sql}", sql).replace("${start}", start + "").replace("${end}", (start+limit) + "");
+		List<Map> recordList = query(sql_);
+		//去掉rownum 、rownumTmep列
+		if(recordList!=null&&recordList.size()>0){
+			for(int i=0;i<recordList.size();i++){
+				Map map = recordList.get(i);
+				map.remove("rownum");
+				map.remove("rownumTmep");
+				recordList.set(i,map);
+			}
+		}
 		return recordList;
 	}
 	
@@ -46,6 +63,15 @@ public class BaseDao {
 		long totalCount = 0;
 		List<Map> result = query(sql);
 		totalCount = ((BigDecimal)result.get(0).get("C")).longValue();
+		return totalCount;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public long queryTotalCount2(String sql){
+		sql = "select count(1) C from "+ sql +"";
+		long totalCount = 0;
+		List<Map> result = query(sql);
+		totalCount = Long.parseLong(result.get(0).get("C").toString());
 		return totalCount;
 	}
 	
