@@ -184,10 +184,10 @@
 
             function selectClick(){
                 if (dynamicGrid.getSelectionModel().hasSelection()){
-                var row = Ext.getCmp("test").getSelectionModel().getSelections();
-                debugger;
+                    var row = Ext.getCmp("test").getSelectionModel().getSelections();
+//                debugger;
 //                alert(row[0].json.C0);
-                var taskId=row[0].json.C0;
+                    var taskId=row[0].json.C0;
                     window.location=appPath+'/check/norowkeyQuery.jsp?taskId='+taskId;
                 }else{
                     alert('请选中要操作的记录!');
