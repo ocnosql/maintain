@@ -1,6 +1,9 @@
 package com.ailk.util;
 
 import com.ailk.model.DataInfo;
+import com.ailk.model.ResultDTO;
+import com.sun.org.apache.commons.logging.Log;
+import com.sun.org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
@@ -17,6 +20,8 @@ import java.util.*;
 public class HDFSUtil {
 
     static String defaultSeparator = "\t";
+
+    public static final Log LOG = LogFactory.getLog(HDFSUtil.class);
 
     public static DataInfo write(Configuration conf, ResultSet rs, String path) throws IOException {
         String uuid = UUID.randomUUID().toString();
@@ -94,7 +99,8 @@ public class HDFSUtil {
         return list;
     }
 
-    public static List<Map> readFiles(Configuration conf, String path, String[] columns, int start, int offset) throws IOException {
+    public static  List<Map>  readFiles(Configuration conf, String path, String[] columns, int start, int offset) throws IOException {
+        //long startTime2 = System.currentTimeMillis();
         FileSystem fs = FileSystem.get(conf);
         FileStatus[] files = fs.listStatus(new Path(path));
         int index = 0;
@@ -106,30 +112,38 @@ public class HDFSUtil {
         //先默认是已经按照一定顺序排定的
         boolean isNextFile = true;
         for(int i=0;i<files.length;i++){
+            //long startTime1 = System.currentTimeMillis();
             if(files[i].isFile()) {
+                //long startTime = System.currentTimeMillis();
                 in = fs.open(files[i].getPath());
+                //long endTime = System.currentTimeMillis();
+                //LOG.info("file open complete! token: " + (endTime - startTime) + "ms");
                 inputStreamReader = new InputStreamReader(in);
                 reader = new BufferedReader(inputStreamReader);
                 while((line = reader.readLine()) != null) {
                     if(index<start){
                         index ++;
                         continue;
-                    }
-                    if(index >= start + offset){
+                    }else if(index >= start + offset){
                         isNextFile = false;
                         break;
+                    }else{
+                        Map record = new LinkedHashMap<String, String>(columns.length);
+                        String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, defaultSeparator);
+                        for(int j = 0; j < columns.length; j++) {
+                            record.put(columns[j], values[j]);
+                        }
+                        list.add(record);
                     }
-                    Map record = new LinkedHashMap<String, String>(columns.length);
-                    String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, defaultSeparator);
-                    for(int j = 0; j < columns.length; j++) {
-                        record.put(columns[j], values[j]);
-                    }
-                    list.add(record);
                     index ++;
                 }
                 if(!isNextFile) break;
             }
+            //long endTime1 = System.currentTimeMillis();
+            //LOG.info("one file complete! token: " + (endTime1 - startTime1) + "ms");
         }
+        //long endTime2 = System.currentTimeMillis();
+        //LOG.info("all file complete! token: " + (endTime2 - startTime2) + "ms");
         return list;
     }
 

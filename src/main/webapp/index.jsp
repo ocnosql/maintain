@@ -100,15 +100,35 @@ var viewport = new Ext.Viewport({
         }]  
 });
 
-
-
-
-
     Ext.QuickTips.init();
     viewport.doLayout();
 	var rootNode = treePanel.getRootNode();
     rootNode.expand(true);
 	treePanel.on('click', function(node, e){
+		if(node.attributes.murl=="tableschem"){
+			node.removeAll();
+			//获取所有的表空间
+			Ext.Ajax.request({
+				url: appPath + "/MenuAction_getTableSchemTree.action?id="+node.id,
+				method: 'GET',
+				success: function (response, options) {
+					var obj = Ext.util.JSON.decode(response.responseText);
+					//Ext.MessageBox.alert('成功', response+'从服务端获取结果: ' + response.responseText+"  "+obj.length);
+					for(var i=0;obj!=undefined&&obj!=null&&i<obj.length;i++){
+						var temp = obj[i];
+						for(var j=0;temp!=undefined&&temp!=null&&j<temp.children.length;j++){
+							node.appendChild(temp.children);
+						}
+					}
+					node.expand(true);
+					node.render();
+					treePanel.render();
+				},
+				failure: function (response, options) {
+					//Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+				}
+			});
+		}
          if(node.isLeaf()){
 			onItemCheck(node.attributes, false);
          }

@@ -64,12 +64,22 @@ var searchPanel = new Ext.FormPanel(
 				text:'导出文本',
 				cls: 'x-icon-btn',
 				handler: function(){
+					if(gid!=null){
+						window.location.href = appPath + "/rowkeyDownload?gid="+gid;
+					}else{
+						Ext.MessageBox.alert('提示', "请先查询，再导出!");
+					}
 					//dynamicGrid.getSelectionModel().selectAll();
 				}
 			},{
 				text:'导出Excel',
 				cls: 'x-icon-btn',
 				handler: function(){
+					if(gid!=null){
+						window.location.href = appPath + "/rowkeyDownload_excel?gid="+gid;
+					}else{
+						Ext.MessageBox.alert('提示', "请先查询，再导出!");
+					}
 					//Utils.copySelectedRows(dynamicGrid);
 				}
 			}]
