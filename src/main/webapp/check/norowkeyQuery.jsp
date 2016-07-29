@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+		 pageEncoding="UTF-8"%>
 <%@ include file="/common/head.jsp"%>
 <%
 	String taskId = request.getParameter("taskId");
@@ -8,122 +8,128 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script>
-Ext.onReady(function(){
-var pageSize = 3;
-var gid = null;
+	<script>
+		Ext.onReady(function(){
+			var pageSize = 200;
+			var gid = null;
 
-/* Ext.Loader.setConfig({enabled: true});
-Ext.Loader.setPath('Ext.ux', '../../examples/ux'); */
+			/* Ext.Loader.setConfig({enabled: true});
+			 Ext.Loader.setPath('Ext.ux', '../../examples/ux'); */
 
 
-var searchPanel = new Ext.FormPanel(
-		{
-			labelAlign:'left',
-			buttonAlign:'right',
-			bodyStyle:'padding:5px;',
-			frame:true,
-			labelWidth:65,
-			monitorValid:true,
-			items:[
-				{
-					layout:'column',labelSeparator:':',
-					title: '查询条件',
-					xtype: 'fieldset',
-					layout:'column',
-					//collapsible: true,
-					autoHeight: true,
-					defaults:{layout: 'form',border:false,columnWidth:.5},
-					items:[
-						{items: [{xtype:'textarea',disabled: true,fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'',
-							enableKeyEvents:true,
-							listeners : {
-								keypress : function(obj, e){
-									
-								}
+			var searchPanel = new Ext.FormPanel(
+					{
+						labelAlign:'left',
+						buttonAlign:'right',
+						bodyStyle:'padding:5px;',
+						frame:true,
+						labelWidth:65,
+						monitorValid:true,
+						items:[
+							{
+								layout:'column',labelSeparator:':',
+								title: '查询条件',
+								xtype: 'fieldset',
+								layout:'column',
+								//collapsible: true,
+								autoHeight: true,
+								defaults:{layout: 'form',border:false,columnWidth:.5},
+								items:[
+									{items: [{xtype:'textarea',disabled: true,fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'',
+										enableKeyEvents:true,
+										listeners : {
+											keypress : function(obj, e){
+
+											}
+										}
+									}],columnWidth:1.05}
+								]//items
 							}
-							}],columnWidth:1.05}
-					]//items
-				}
-			],
-			buttons: [{
-				text:'查询',
-				cls: 'x-icon-btn',
-				handler: function() {
-					<%--alert(${taskId});--%>
-                   gid = null;
-                   dynamicGrid.store.baseParams.gid = null;
-				   var a = searchPanel.getForm().getValues();
-	               var params = dynamicGrid.store.baseParams;
-	               Ext.apply(params, a);
-	               dynamicGrid.store.baseParams = params;
-					initStoreLoad();
-				}
-			}, {
-				text:'导出文本',
-				cls: 'x-icon-btn',
-				handler: function(){
-					//dynamicGrid.getSelectionModel().selectAll();
-				}
-			},{
-				text:'导出Excel',
-				cls: 'x-icon-btn',
-				handler: function(){
-					//Utils.copySelectedRows(dynamicGrid);
-				}
-			}]
-		}
-);//FormPanel
+						],
+						buttons: [{
+							text:'查询',
+							cls: 'x-icon-btn',
+							handler: function() {
+								<%--alert(${taskId});--%>
+								gid = null;
+								dynamicGrid.store.baseParams.gid = null;
+								var a = searchPanel.getForm().getValues();
+								var params = dynamicGrid.store.baseParams;
+								Ext.apply(params, a);
+								dynamicGrid.store.baseParams = params;
+								initStoreLoad();
+							}
+						}, {
+							text:'导出文本',
+							cls: 'x-icon-btn',
+							handler: function(){
+								//dynamicGrid.getSelectionModel().selectAll();
+								export1("1");
+							}
+						},{
+							text:'导出Excel',
+							cls: 'x-icon-btn',
+							handler: function(){
+								//Utils.copySelectedRows(dynamicGrid);
+								export1("0");
+							}
+						}]
+					}
+			);//FormPanel
 
-var dynamicGrid = new Ext.grid.DynamicGrid({  
-    title: '数据展示列表',  
-    //renderTo: 'dynamic-grid',  
-    storeUrl: appPath + "/NoRowkeyQueryAction_query.action?taskId=${taskId}",
-    width : '100%',  
-    height: 500,  
-    rowNumberer: true,  
-    //checkboxSelModel: true,  
-    sm: new Ext.grid.CheckboxSelectionModel(),
-    
-    bbar : new Ext.PagingToolbar({  
-    	//plugins: new Ext.ux.Andrie.pPageSize(), 
-        pageSize : pageSize,  
-        displayInfo : true,  
-        displayMsg : '显示第{0}到{1}条数据,共{2}条',  
-        emptyMsg : "没有数据",  
-        beforePageText : "第",  
-        afterPageText : '页 共{0}页, 每页显示'+ pageSize +'条'   
-    })  
-});
+			var dynamicGrid = new Ext.grid.DynamicGrid({
+				title: '数据展示列表',
+				//renderTo: 'dynamic-grid',
+				storeUrl: appPath + "/NoRowkeyQueryAction_query.action?taskId=${taskId}",
+				width : '100%',
+				height: 500,
+				rowNumberer: true,
+				//checkboxSelModel: true,
+				sm: new Ext.grid.CheckboxSelectionModel(),
 
-Ext.MyViewport=Ext.extend(Ext.Viewport ,{
-	xtype:"viewport",
-	layout:"anchor",
-	autoScroll: true,
-	initComponent: function(){
-		this.items=[
-		    searchPanel,
-		    dynamicGrid
-		],
-		Ext.MyViewport.superclass.initComponent.call(this);
-	}
-});
+				bbar : new Ext.PagingToolbar({
+					//plugins: new Ext.ux.Andrie.pPageSize(),
+					pageSize : pageSize,
+					displayInfo : true,
+					displayMsg : '显示第{0}到{1}条数据,共{2}条',
+					emptyMsg : "没有数据",
+					beforePageText : "第",
+					afterPageText : '页 共{0}页, 每页显示'+ pageSize +'条'
+				})
+			});
 
-var viewport = new Ext.MyViewport();
-	initStoreLoad();
-	function initStoreLoad(){
-		dynamicGrid.store.load({ params:{start: 0,limit: dynamicGrid.getBottomToolbar().pageSize},
-			callback: function(record, options, success){
-				if(success){
-					gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
-					//dynamicGrid.store.baseParams.gid = gid;
-					Ext.getCmp('sql').setValue(gid);
+			Ext.MyViewport=Ext.extend(Ext.Viewport ,{
+				xtype:"viewport",
+				layout:"anchor",
+				autoScroll: true,
+				initComponent: function(){
+					this.items=[
+						searchPanel,
+						dynamicGrid
+					],
+							Ext.MyViewport.superclass.initComponent.call(this);
 				}
-			}});
-	}
+			});
 
-}); 
-</script>
+			var viewport = new Ext.MyViewport();
+			initStoreLoad();
+			function initStoreLoad(){
+				dynamicGrid.store.load({ params:{start: 0,limit: dynamicGrid.getBottomToolbar().pageSize},
+					callback: function(record, options, success){
+						if(success){
+							gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
+							//dynamicGrid.store.baseParams.gid = gid;
+							Ext.getCmp('sql').setValue(gid);
+						}
+					}});
+			}
+
+			function export1(exportType){
+				window.location.href= appPath + "/dataExport?taskId=${taskId}&exportType="+exportType;
+			}
+
+		});
+	</script>
 </head>
 <body>
 <div id="dynamic-grid"></div>
