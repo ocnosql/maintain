@@ -2,6 +2,7 @@ package com.ailk.dao;
 
 import com.ailk.core.exception.AppRuntimeException;
 import com.ailk.util.DateUtil;
+import com.ailk.util.PropertiesUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,11 +16,15 @@ import java.util.Map;
  * Created by lihui on 2016/7/13.
  */
 public class HiveJdbc {
+    //    public static final String jdbc_driver = "org.apache.hive.jdbc.HiveDriver";
+//    public static final String jdbc_url = "jdbc:hive2://10.15.46.16:10001";
+//    public static final String jdbc_username = "hadoop";
+//    public static final String jdbc_password = "cloud@2016";
+    public static final String jdbc_driver = PropertiesUtil.getProperty("runtime.properties", "hiveJdbc.driverClass");
+    public static final String jdbc_url = PropertiesUtil.getProperty("runtime.properties", "hiveJdbc.url");
+    public static final String jdbc_username = PropertiesUtil.getProperty("runtime.properties", "hiveJdbc.username");
+    public static final String jdbc_password = PropertiesUtil.getProperty("runtime.properties", "hiveJdbc.passwd");
 
-    public static final String jdbc_driver = "org.apache.hive.jdbc.HiveDriver";
-    public static final String jdbc_url = "jdbc:hive2://10.15.46.16:10001";
-    public static final String jdbc_username = "hadoop";
-    public static final String jdbc_password = "cloud@2016";
     private static Log log = LogFactory.getLog(HiveJdbc.class);
 
     public static Connection getConnection() {
@@ -145,7 +150,7 @@ public class HiveJdbc {
 
     public static boolean queryCreateTable(String sql, String table) {
         boolean flag = false;
-        String temp_sql = "CREATE TABLE " + table + " as " + sql;
+        String temp_sql = "CREATE TABLE " + table + " row format delimited fields terminated by '\t' as " + sql;
         log.info("execute queryCreateTable : " + temp_sql);
         Connection conn = null;
         Statement stmt = null;
@@ -173,7 +178,8 @@ public class HiveJdbc {
     public static void test() {
 //        List<Map> lis=HiveJdbc.query("select * from qry_ins_user limit 20");
 //        System.out.print("ssss:=" + lis.size());
-        HiveJdbc.queryTotalCount("temp_20160720145345");
+        long a= HiveJdbc.queryTotalCount("temp_20160720145345");
+        System.out.println(a);
     }
 
     public static void main(String[] args) throws Exception {

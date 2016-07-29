@@ -2,25 +2,28 @@ package com.ailk.service.impl;
 
 import com.ailk.core.exception.AppRuntimeException;
 import com.ailk.dao.BaseDao;
+import com.ailk.dao.HiveDao;
 import com.ailk.dao.HiveJdbc;
 import com.ailk.model.ResultDTO;
 import com.ailk.model.ValueSet;
+import com.ailk.oci.ocnosql.common.config.Connection;
 import com.ailk.service.IQueryService;
 import com.ailk.util.DateUtil;
+import com.ailk.util.HDFSUtil;
+import com.ailk.util.PropertiesUtil;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class QueryByNoRowkeyService implements IQueryService {
-
     public static final Log LOG = LogFactory.getLog(QueryByNoRowkeyService.class);
     public static final String TEMP_TABLE_PREFIX = "temp_";
+    public static final String HADOOP_FILE_PATH = PropertiesUtil.getProperty("runtime.properties", "hadoopPath.tempTablePath");
     BaseDao dao = new BaseDao("ocnosql");
-
+    private HiveDao hiveDao = new HiveDao();
+    //"/cloud/hive/warehouse/";
     /**
      * 任务提交
      *
@@ -43,12 +46,24 @@ public class QueryByNoRowkeyService implements IQueryService {
 //            boolean flag=false;
             if (flag) {
                 LOG.info("create table success");
-                totalCount = HiveJdbc.queryTotalCount(tableName);
-                String update_task = "update qrytask set status=?,updateDate=now(),timeDiff=TIMESTAMPDIFF(SECOND,createDate,updateDate),totalCount=? where tempTable=?;";
-                Object[] a2 = new Object[3];
+                List<Map> cloumns = HiveJdbc.query("select * from " + tableName + " limit 1");
+                Map record = cloumns.get(0);
+                Iterator it = record.keySet().iterator();
+                String cloumns_table = "";
+                while (it.hasNext()) {
+                    String columnName = (String) it.next();
+                    cloumns_table = cloumns_table + columnName.replace(tableName + ".", "") + ",";
+                }
+                cloumns_table = cloumns_table.substring(0, cloumns_table.length() - 1);
+
+                totalCount=hiveDao.hiveGetRowNums(tableName);
+                //totalCount = HiveJdbc.queryTotalCount(tableName);
+                String update_task = "update qrytask set status=?,updateDate=now(),timeDiff=TIMESTAMPDIFF(SECOND,createDate,updateDate),totalCount=?,cloumnsSql=? where tempTable=?;";
+                Object[] a2 = new Object[4];
                 a2[0] = 1;
                 a2[1] = String.valueOf(totalCount);
-                a2[2] = tableName;
+                a2[2] = cloumns_table;
+                a2[3] = tableName;
                 dao.executeUpdate(update_task, a2);
                 LOG.info("update qrytask success");
             } else {
@@ -121,4 +136,41 @@ public class QueryByNoRowkeyService implements IQueryService {
             throw new AppRuntimeException(e);
         }
     }
+
+    public ResultDTO queryExport(ValueSet vs) {
+//        String exportType = "0";
+        List<Map> exlist = null;
+        ResultDTO dto = null;
+        try {
+            String taskId = vs.getString("taskId");
+            String mysql_select = "select totalCount,tempTable,querySql,cloumnsSql from qrytask where id=" + taskId;
+            List<Map> resultList = dao.query(mysql_select);
+            if (resultList.size() > 0) {
+                String totalCount = resultList.get(0).get("totalCount").toString();
+                String tableName = resultList.get(0).get("tempTable").toString();
+                String querySql = resultList.get(0).get("querySql").toString();
+                String columns_sql = resultList.get(0).get("cloumnsSql").toString();
+//                if (exportType.equals("0")) {
+                Configuration conf = Connection.getInstance().getConf();
+                String path = HADOOP_FILE_PATH + tableName;
+                String[] columns = columns_sql.split(",");
+                exlist = HDFSUtil.readFiles(conf, path, columns, 0, Integer.parseInt(totalCount));
+//                } else if (exportType.equals("1")) {
+//                    exlist = HiveJdbc.query("select * from " + tableName);
+//                }
+
+                dto = new ResultDTO();
+                dto.setRecords(exlist);
+                dto.setHasPaged(false);
+                dto.setSuccess(true);
+                Map<String, String> other = new HashMap<String, String>();
+                other.put("tableName", tableName);
+                dto.setExtInfo(other);
+            }
+            return dto;
+        } catch (Throwable e) {
+            throw new AppRuntimeException(e);
+        }
+    }
+
 }

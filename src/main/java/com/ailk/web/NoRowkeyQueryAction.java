@@ -11,14 +11,40 @@ import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 public class NoRowkeyQueryAction extends BaseAction {
 
     public static final Log LOG = LogFactory.getLog(NoRowkeyQueryAction.class);
+    private InputStream file;
+    private String fileName;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public InputStream getFile() {
+        return file;
+    }
+
+    public void setFile(InputStream file) {
+        this.file = file;
+    }
 
     public String taskSubmit() {
         Gson gs = new Gson();
@@ -103,9 +129,78 @@ public class NoRowkeyQueryAction extends BaseAction {
         }
         Map<String, String[]> fields = new HashMap<String, String[]>();
         Map<String, List> testData2 = new HashMap<String, List>();
-        fields.put("taskList", new String[]{"主键", "任务类型", "任务执行开始时间", "任务执行结束时间", "任务时长/秒", "总行数", "查询语句"});
+        fields.put("taskList", new String[]{"主键", "任务状态", "任务执行开始时间", "任务执行结束时间", "任务时长/秒", "总行数", "查询语句"});
         testData2.put("taskList", dataList);
         this.setAjaxStr(ResultBuild.buildJson(fields.get("taskList"), testData2.get("taskList"), totalCountByPage));
         return AJAXRTN;
+    }
+
+    public String dataExport() throws WriteException, IOException {
+        ValueSet vs = new ValueSet();
+        bindParams(vs, ServletActionContext.getRequest());
+        QueryByNoRowkeyService service = new QueryByNoRowkeyService();
+
+        String exportType=vs.getString("exportType");
+        ResultDTO dto = service.queryExport(vs);
+        List<Map> records = dto.getRecords();
+        String tableName = (String) dto.getExtInfo().get("tableName");
+        String[] fields = ResultBuild.createFieldHeader(records.get(0));
+
+        ByteArrayOutputStream out = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        if (exportType.equals("0")) {//.xls export
+            WritableWorkbook workbook = null;
+            try {
+                out = new ByteArrayOutputStream();
+                workbook = Workbook.createWorkbook(out);
+                WritableSheet sheet = workbook.createSheet("导出表", 1);
+
+                String[] strNames = fields;
+                //head
+                for (int i = 0; i < strNames.length; i++) {
+                    Label label0 = new Label(i, 0, strNames[i].replace(tableName + ".", ""));
+                    sheet.addCell(label0);
+                }
+                //data
+                for (int i = 0; i < records.size(); i++) {
+                    Map<String, String> record = (Map) records.get(i);
+                    int j = 0;
+                    for (Map.Entry<String, String> entry : record.entrySet()) {
+//                        System.out.println(entry.getKey() + "--->" + entry.getValue());
+                        sheet.addCell(new Label(j, i + 1, entry.getValue()));
+                        j++;
+                    }
+//                    System.out.println("行数i=" + i);
+                }
+                workbook.write();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                workbook.close();
+            }
+            fileName = "" + sdf.format(new Date()) + ".xls";
+        } else {//txt export
+            try {
+                StringBuffer sb = new StringBuffer();
+                out = new ByteArrayOutputStream();
+                for (int i = 0; i < records.size(); i++) {
+                    Map<String, String> record = (Map) records.get(i);
+                    sb.setLength(0);
+                    for (Map.Entry<String, String> entry : record.entrySet()) {
+                        sb.append(entry.getValue()).append("\t");
+//                        System.out.println("ssss:=" + sb.toString());
+                    }
+                    sb.deleteCharAt(sb.length() - 1);
+                    sb.append("\n");
+                    out.write(sb.toString().getBytes());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            fileName = "" + sdf.format(new Date()) + ".txt";
+        }
+        byte[] b = out.toByteArray();
+        file = new ByteArrayInputStream(b);
+        return "success";
     }
 }
