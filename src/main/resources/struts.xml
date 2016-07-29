@@ -63,6 +63,14 @@
 			</result>
 		</action>
 
+		<!-- 报表导出 -->
+		<action name="dataExport" class="com.ailk.web.NoRowkeyQueryAction" method="dataExport">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="inputName">file</param>
+			</result>
+		</action>
+
 	</package>
 	
 	
