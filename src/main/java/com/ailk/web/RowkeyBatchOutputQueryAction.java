@@ -20,6 +20,7 @@ import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
 
+import com.sun.org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
@@ -83,9 +84,13 @@ public class RowkeyBatchOutputQueryAction extends BaseAction {
             BaseDao dao = new BaseDao("ocnosql");
             try {
                 HttpServletRequest httpServletRequest = ServletActionContext.getRequest();
-                MultiPartRequestWrapper request = (MultiPartRequestWrapper) ServletActionContext.getRequest();
-                File[] files = request.getFiles("uploadfileid");
-                if(files!=null&&files.length>0) {
+                String filePath = vs.get("filepath_server").toString();
+                LOG.info("filePath="+filePath);
+                //MultiPartRequestWrapper request = (MultiPartRequestWrapper) ServletActionContext.getRequest();
+                //File[] files = request.getFiles("uploadfileid");
+                File file = new File(filePath);
+                //if(files!=null&&files.length>0) {
+                if(file.exists()&&!file.isDirectory()) {
                     //生成任务并插入任务表
                     String[] params = new String[6];
                     params[0] = UUID.randomUUID().toString();             //id
@@ -145,7 +150,7 @@ public class RowkeyBatchOutputQueryAction extends BaseAction {
 
                     dao.executeUpdate("insert into task_status(id,task_type,finish_flag,dst_path,sql_str,columns_str,create_time) values(?,?,?,?,?,?,now())", params);
 
-                    RowkeyBatchMainThread  rowkeyBatchMainThread = new RowkeyBatchMainThread(files[0],params[0],params[3],params[4]);
+                    RowkeyBatchMainThread  rowkeyBatchMainThread = new RowkeyBatchMainThread(file,params[0],params[3],params[4]);
                     rowkeyBatchMainThread.start();
                     this.setAjaxStr("{success:true}");
                 }else{
@@ -159,6 +164,95 @@ public class RowkeyBatchOutputQueryAction extends BaseAction {
             return AJAXRTN;
         }
     }
+
+
+
+    private File uploadfileid; //与前台保持一致
+    private String uploadfileidContentType;
+    private String uploadfileidFileName;
+    private String types; //存放允许上传的后缀名
+
+    public File getUploadfileid() {
+        return uploadfileid;
+    }
+
+    public void setUploadfileid(File uploadfileid) {
+        this.uploadfileid = uploadfileid;
+    }
+
+    public String getUploadfileidContentType() {
+        return uploadfileidContentType;
+    }
+
+    public void setUploadfileidContentType(String uploadfileidContentType) {
+        this.uploadfileidContentType = uploadfileidContentType;
+    }
+
+    public String getUploadfileidFileName() {
+        return uploadfileidFileName;
+    }
+
+    public void setUploadfileidFileName(String uploadfileidFileName) {
+        this.uploadfileidFileName = uploadfileidFileName;
+    }
+
+    public String getTypes() {
+        return types;
+    }
+
+    public void setTypes(String types) {
+        this.types = types;
+    }
+
+    public String upload(){
+        Gson gs = new Gson();
+        JsonResult result = new JsonResult();
+        try{
+            String sPath = ServletActionContext.getRequest().getRealPath("/uploadtemp");
+            LOG.info(sPath);
+            if(uploadfileid==null){
+                result.setSuccess(false);
+                result.setMessage("");
+            }else{
+                File fileDir =new File(sPath);
+                //如果文件夹不存在则创建
+                if  (!fileDir .exists()  && !fileDir .isDirectory()) {
+                    LOG.info("目录不存在，创建目录");
+                    fileDir .mkdir();
+                } else {
+                    LOG.info("目录不存在，创建目录");
+                }
+                //获取文件名称
+                String fileName = uploadfileid.getName();
+                //复制文件到指定目录
+                InputStream inStream = new FileInputStream(uploadfileid); //读入原文件
+                String savePath = sPath+"\\"+uploadfileidFileName;
+                File fileDst = new File(savePath);
+                if(fileDst.exists()&&!fileDst.isDirectory()){
+                    fileDst.delete();
+                }
+                FileOutputStream fs = new FileOutputStream(savePath);
+                byte[] buffer = new byte[1000];
+                int byteread ;
+                while ( (byteread = inStream.read(buffer)) != -1) {
+                    fs.write(buffer, 0, byteread);
+                }
+                result.setSuccess(true);
+                result.setExtInfo(savePath);
+                inStream.close();
+                fs.close();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            result.setSuccess(false);
+            result.setMessage("异常");
+            result.setExtInfo("");
+        }finally {
+            this.setAjaxStr(gs.toJson(result));
+        }
+        return AJAXRTN;
+    }
+
 
     public String getTableSpaces() {
         String sql = "select distinct table_schem from system.catalog";
