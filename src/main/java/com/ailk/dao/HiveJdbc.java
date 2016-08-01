@@ -148,7 +148,7 @@ public class HiveJdbc {
         return totalCount;
     }
 
-    public static boolean queryCreateTable(String sql, String table) {
+    public static boolean queryCreateTable(String sql, String table) throws AppRuntimeException{
         boolean flag = false;
         String temp_sql = "CREATE TABLE " + table + " row format delimited fields terminated by '\t' as " + sql;
         log.info("execute queryCreateTable : " + temp_sql);
@@ -162,7 +162,8 @@ public class HiveJdbc {
                 flag = true;
             }
         } catch (Exception e) {
-            throw new AppRuntimeException(e);
+//            throw new AppRuntimeException(e);
+            log.error("execute queryCreateTable Exception:"+e.getMessage());
         } finally {
             if (stmt != null) {
                 try {
