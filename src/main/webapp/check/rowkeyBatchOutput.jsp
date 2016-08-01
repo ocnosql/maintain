@@ -88,6 +88,50 @@
                         name: 'uploadfileid'
                       }]},
 
+                      {buttons:[
+                        {
+                          text:'上传',
+                          id:"upload_button",
+                          cls: 'x-icon-btn',
+                          handler: function() {
+
+                            searchPanel.getForm().submit({//客户端的数据提交给服务器
+                              url:appPath + "/RowkeyBatchOutputQueryAction_upload.action",
+                              waitTitle:"Please wait",
+                              waitMsg:"Uploading...",
+                              //如果submit失敗，執行這一個function
+                              failure:function(form1,action){
+                                Ext.MessageBox.hide();
+                                Ext.MessageBox.alert('提示',"没有生成任务，请确定已经选择文件");
+                              },
+                              success: function(form1,action){
+                                if(action.result==undefined){
+                                  Ext.MessageBox.hide();
+                                  Ext.MessageBox.alert('提示',"上传失败");
+                                  Ext.getCmp('filepath_server').setValue("");
+                                }else{
+                                  Ext.MessageBox.hide();
+                                  Ext.MessageBox.alert('提示',"上传成功");
+                                  Ext.getCmp('filepath_server').setValue(action.result.extInfo);
+                                }
+                              }
+                            })
+                          }
+                        }
+                      ]
+                      },
+
+                      {items: [{
+                        xtype:'textfield',
+                        fieldLabel: '文件地址',
+                        id: 'filepath_server',
+                        name:'filepath_server',
+                        anchor:'90%',
+                        value:'',
+                        enableKeyEvents:true,
+                        readOnly: true
+                      }]},
+
                       {items: [{
                         xtype:'combo',
                         fieldLabel: '表空间',
@@ -170,6 +214,10 @@
                       }
                       if(Ext.getCmp('table_name').getValue()==null||Ext.getCmp('table_name').getValue()==''){
                         Ext.MessageBox.alert('提示', "请选择表!");
+                        return ;
+                      }
+                      if(Ext.getCmp('filepath_server').getValue()==null||Ext.getCmp('filepath_server').getValue()==''){
+                        Ext.MessageBox.alert('提示', "请先上传文件!");
                         return ;
                       }
                       //searchPanel..setParameter("start",0);
@@ -273,6 +321,7 @@
       });
 
       var viewport = new Ext.MyViewport();
+      //Ext.getCmp('filepath_server').hide();
 
     });
   </script>

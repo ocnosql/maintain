@@ -4,6 +4,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="<%=appPath%>/js/DateTime/Spinner.css"/>
+    <script type="text/javascript" src="<%=appPath%>/js/DateTime/Spinner.js"></script>
+    <script type="text/javascript" src="<%=appPath%>/js/DateTime/SpinnerField.js"></script>
+    <script type="text/javascript" src="<%=appPath%>/js/DateTime/DateTimeField.js"></script>
     <script>
         Ext.onReady(function(){
             var pageSize = 50;
@@ -49,56 +53,11 @@
                                 defaults:{layout: 'form',border:false,columnWidth:.5},
                                 items:[
 
-                                    {items: [{xtype:'textfield',enableKeyEvents:true,fieldLabel: '开始日期',name: 'startDate',value:'20121230',anchor:'90%',
-                                        listeners : {
-                                            keypress : function(obj, e){
-                                                if(event.keyCode == 13){
-                                                    var a =searchPanel.getForm().getValues();
-                                                    var params = dynamicGrid.store.baseParams;
-                                                    Ext.apply(params,a);
-                                                    dynamicGrid.store.baseParams = params;
-                                                    dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize} })
-                                                }
-                                            }
-                                        }}]},
-                                    {items: [{xtype:'textfield',enableKeyEvents:true,fieldLabel: '结束日期',name: 'endDate',value:'20130101',anchor:'90%',
-                                        listeners : {
-                                            keypress : function(obj, e){
-                                                if(event.keyCode == 13){
-                                                    var a =searchPanel.getForm().getValues();
-                                                    var params = dynamicGrid.store.baseParams;
-                                                    Ext.apply(params,a);
-                                                    dynamicGrid.store.baseParams = params;
-                                                    dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize} })
-                                                }
-                                            }
-                                        }}]},
-                                    {items: [{
-                                        xtype: 'combo',
-                                        //id: 'hashType',
-                                        fieldLabel: '任务类型',
-                                        hiddenName: 'hashType',
-                                        //forceSelection : true,
-                                        editable: false,
-                                        anchor:'90%',
-                                        store: new Ext.data.SimpleStore({
-                                            fields: ['text','value'],
-                                            data: [['详单条数稽核','1'],['一致性稽核','2'],['主键查询','3'],['数据修改','4'],['数据删除','5'],['统计分析','6']]
-                                        }),
-                                        valueField: 'value',
-                                        displayField: 'text',
-                                        typeAhead: true,
-                                        mode: 'local',
-                                        triggerAction: 'all',
-                                        selectOnFocus: true,
-                                        //allowBlank: false,
-                                        listeners: {
-                                            afterRender: function(combo) {
-                                                /* 		var firstValue = combo.getStore().reader.arrayData[0][1];
-                                                 combo.setValue(firstValue);//同时下拉框会将与name为firstValue值对应的 text显示   */
-                                            }
-                                        }
-                                    }]},
+//                                    {items: [{xtype:'textfield',enableKeyEvents:true,fieldLabel: '开始日期',name: 'startDate',value:'20121230',anchor:'90%'
+//
+//                                    }]},
+                                    {items:[{xtype:'datetimefield',fieldLabel: '开始日期',name: 'startDate',value:'',anchor:'50%'}]},
+                                    {items:[{xtype:'datetimefield',fieldLabel: '结束日期',name: 'endDate',value:'',anchor:'50%'}]},
                                     {items: [{
                                         xtype: 'combo',
                                         //id: 'hashType',
@@ -109,7 +68,7 @@
                                         anchor:'90%',
                                         store: new Ext.data.SimpleStore({
                                             fields: ['text','value'],
-                                            data: [['成功','1'],['失败','2'],['执行中','3']]
+                                            data: [['成功','1'],['执行中','0']]
                                         }),
                                         valueField: 'value',
                                         displayField: 'text',
@@ -145,7 +104,19 @@
                             handler: function(){
                                 selectClick();
                             }
-                        }]
+                        },{
+                         text: '复 位',
+                         cls: 'x-icon-btn',
+                         handler: function(){
+                             searchPanel.getForm().reset();
+                             var vals =searchPanel.getForm().getValues();
+                             dynamicGrid.store.baseParams = {};
+                             var params = dynamicGrid.store.baseParams;
+                             Ext.apply(params, vals);
+                             dynamicGrid.store.baseParams = params;
+                             dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize} });
+                         }
+                         }]
                     }
             );//FormPanel
 
@@ -184,10 +155,10 @@
 
             function selectClick(){
                 if (dynamicGrid.getSelectionModel().hasSelection()){
-                var row = Ext.getCmp("test").getSelectionModel().getSelections();
-                debugger;
+                    var row = Ext.getCmp("test").getSelectionModel().getSelections();
+//                debugger;
 //                alert(row[0].json.C0);
-                var taskId=row[0].json.C0;
+                    var taskId=row[0].json.C0;
                     window.location=appPath+'/check/norowkeyQuery.jsp?taskId='+taskId;
                 }else{
                     alert('请选中要操作的记录!');
