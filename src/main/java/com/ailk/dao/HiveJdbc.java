@@ -91,7 +91,7 @@ public class HiveJdbc {
      * @param limit
      * @return
      */
-    public static List<Map> queryByPage(String sql, int start, int limit) {
+    public static List<Map> queryByPage(String sql,String tableName,int start, int limit) {
         log.info("execute queryByPage : " + sql);
         Connection conn = null;
         Statement stmt = null;
@@ -110,9 +110,9 @@ public class HiveJdbc {
                 if (count > start) {
                     for (int i = 1; i <= columnCount; i++) {
                         if (rs.getObject(i) instanceof java.util.Date) {
-                            record.put(meta.getColumnName(i), DateUtil.format(rs.getTimestamp(i)));
+                            record.put(meta.getColumnName(i).replace(tableName+".",""), DateUtil.format(rs.getTimestamp(i)));
                         } else {
-                            record.put(meta.getColumnName(i), rs.getObject(i));
+                            record.put(meta.getColumnName(i).replace(tableName+".",""), rs.getObject(i));
                         }
                     }
                     recordList.add(record);

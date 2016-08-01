@@ -119,6 +119,8 @@ public class NoRowkeyQueryAction extends BaseAction {
                 statusName = "进行中";
             } else if (status == 1) {
                 statusName = "已完成";
+            } else if (status == 2) {
+                statusName = "失败";
             }
             String createDate = (String) m.get("createDate");
             String updateDate = (String) m.get("updateDate");

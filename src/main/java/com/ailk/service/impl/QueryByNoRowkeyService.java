@@ -35,7 +35,6 @@ public class QueryByNoRowkeyService implements IQueryService {
             String table_Name = DateUtil.format(new Date(), "yyyyMMddHHmmss");
             String tableName = TEMP_TABLE_PREFIX + table_Name;
             long totalCount = 0;
-            boolean flag = HiveJdbc.queryCreateTable(sql, tableName);
             String insert_task = "insert into qrytask(status,createDate,updateDate,totalCount,tempTable,querySql) values(?,now(),now(),?,?,?);";
             Object[] a = new Object[4];
             a[0] = 0;
@@ -43,6 +42,7 @@ public class QueryByNoRowkeyService implements IQueryService {
             a[2] = tableName;
             a[3] = sql;
             dao.executeUpdate(insert_task, a);
+            boolean flag = HiveJdbc.queryCreateTable(sql, tableName);
             LOG.info("insert qrytask success");
 //            boolean flag=false;
             if (flag) {
@@ -61,7 +61,7 @@ public class QueryByNoRowkeyService implements IQueryService {
                 //totalCount = HiveJdbc.queryTotalCount(tableName);
                 String update_task = "update qrytask set status=?,updateDate=now(),timeDiff=TIMESTAMPDIFF(SECOND,createDate,updateDate),totalCount=?,cloumnsSql=? where tempTable=?;";
                 Object[] a2 = new Object[4];
-                a2[0] = 1;
+                a2[0] = 1;//成功
                 a2[1] = String.valueOf(totalCount);
                 a2[2] = cloumns_table;
                 a2[3] = tableName;
@@ -69,6 +69,11 @@ public class QueryByNoRowkeyService implements IQueryService {
                 LOG.info("update qrytask success");
             } else {
                 LOG.info("create table failure");
+                String update_task = "update qrytask set status=?,updateDate=now(),timeDiff=TIMESTAMPDIFF(SECOND,createDate,updateDate) where tempTable=?;";
+                Object[] a3 = new Object[2];
+                a3[0] = 2;//失败
+                a3[1] = tableName;
+                dao.executeUpdate(update_task, a3);
             }
             return null;
         } catch (Throwable e) {
@@ -145,7 +150,7 @@ public class QueryByNoRowkeyService implements IQueryService {
                     end = page * limit;
                 }
                 String tempsql = "select * from " + tableName + " limit " + end;
-                List<Map> list = HiveJdbc.queryByPage(tempsql, start, limit);
+                List<Map> list = HiveJdbc.queryByPage(tempsql,tableName, start, limit);
                 dto = new ResultDTO();
                 dto.setRecords(list);
                 dto.setTotalCount(Long.parseLong(totalCount));
