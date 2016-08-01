@@ -13,6 +13,7 @@ import com.ailk.util.HDFSUtil;
 import com.ailk.util.PropertiesUtil;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 
 import java.util.*;
@@ -82,11 +83,32 @@ public class QueryByNoRowkeyService implements IQueryService {
      * @return
      */
     public ResultDTO loadDataTask(ValueSet vs) {
+        String startDate=vs.getString("startDate");
+        String endDate=vs.getString("endDate");
+        String status=vs.getString("status");
         int start = Integer.parseInt(vs.getString("start"));
         int limit = Integer.parseInt(vs.getString("limit"));
-        long totalCount = dao.queryTotalCount2("qrytask");
         long pageNow = start == 0 ? 0 : start / limit;
-        List<Map> list = dao.query("select * from qrytask limit " + limit * pageNow + "," + limit + "");
+        String sqlcon=" where 1=1 ";
+        if(StringUtils.isNotBlank(startDate)&&!StringUtils.isNotBlank(endDate)){
+            sqlcon=sqlcon+" and createDate>='"+startDate+"'";
+        }
+        if(StringUtils.isNotBlank(endDate)&&!StringUtils.isNotBlank(startDate)){
+            sqlcon=sqlcon+" and updateDate<='"+endDate+"'";
+        }
+        if(StringUtils.isNotBlank(endDate)&&StringUtils.isNotBlank(startDate)){
+            sqlcon=sqlcon+" and (updateDate>='"+startDate+"' and updateDate<='"+endDate+"')";
+        }
+        if(StringUtils.isNotBlank(status)){
+            sqlcon=sqlcon+" and status="+status;
+        }
+        String sql="select * from qrytask "+sqlcon+" limit " + limit * pageNow + "," + limit + "";
+        String sql2="select count(*) as C from qrytask "+sqlcon;
+        long totalCount =0;
+        List<Map> list = dao.query(sql);
+        List<Map> listCount=dao.query(sql2);
+        totalCount = Long.parseLong(listCount.get(0).get("C").toString());
+
         ResultDTO dto = new ResultDTO();
         dto.setRecords(list);
         dto.setTotalCount(totalCount);
