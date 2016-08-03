@@ -7,10 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lihui on 2016/7/13.
@@ -174,6 +171,38 @@ public class HiveJdbc {
             }
         }
         return flag;
+    }
+
+    public static Map createHiveTable(String sql) throws AppRuntimeException{
+        boolean flag = false;
+        log.info("execute createHiveTable : " + sql);
+        Connection conn = null;
+        Statement stmt = null;
+        Map map=new HashMap();
+        try {
+            conn = HiveJdbc.getConnection();
+            stmt = conn.createStatement();
+            int a = stmt.executeUpdate(sql);
+            if (a == 0) {
+                flag = true;
+                map.put("flag",true);
+                map.put("msg","success");
+            }
+        } catch (Exception e) {
+//            throw new AppRuntimeException(e);
+            log.error("execute queryCreateTable Exception:"+e.getMessage());
+            map.put("flag",false);
+            map.put("msg",e.getMessage());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (Exception e) {
+                    log.error(e);
+                }
+            }
+        }
+        return map;
     }
 
     public static void test() {
