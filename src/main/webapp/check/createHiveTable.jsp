@@ -251,11 +251,6 @@
                     handler: function(){
                         simple.form.reset();
                     }//重置表单
-                }, {
-                    text: '取消',
-                    handler: function(){
-                        win.close();
-                    }//重置表单
                 }]
             });
             //添加第一个fieldSet
