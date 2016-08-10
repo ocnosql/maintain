@@ -13,6 +13,18 @@
          */
         Ext.onReady(function(){
             var c_index=0;
+//            var myCheckboxGroup = new Ext.form.CheckboxGroup({
+//                xtype: 'checkboxgroup',
+//                name: 'model_type',
+//                width: 80,  //宽度220
+//                columns: 1,  //在上面定义的宽度上展示3列
+//                fieldLabel: '分区字段',
+//                id: 'org_field_colName_' + c_index,
+//                name: 'org_field_colName_' + c_index,
+//                items: [
+//                    {boxLabel: '是否选上', name: 'store'}
+//                ]
+//            });
             // 添加按钮
             var newDept_action = new Ext.Action({
                 cls: 'x-btn-text-icon bmenu',
@@ -47,6 +59,22 @@
                                     anchor: '90%'
                                 }]
                             } //组件结束
+                            ,
+                            {
+                                columnWidth: .2,
+                                layout: 'form',
+                                border: false,
+                                items: [{
+                                    xtype: 'checkboxgroup',
+                                    name: 'model_type',
+                                    width: 80,  //宽度220
+                                    columns: 1,  //在上面定义的宽度上展示3列
+                                    fieldLabel: '分区字段',
+                                    items: [
+                                        {boxLabel: '是否选上', name: 'org_field_partName_' + c_index}
+                                    ]
+                                }]
+                            } //组件结束
                             , //按钮开始
                             {
                                 columnWidth: .2,
@@ -79,6 +107,7 @@
                 },
                 iconCls: 'blist'
             });
+
             var first_Org_fieldSet = new Ext.Panel({
 
                 //column布局控件开始
@@ -127,27 +156,48 @@
                             anchor: '90%'
                         }]
                     } //组件结束
-//                    ,
-//                    {
-//                        columnWidth: .2,
-//                        layout: 'form',
-//                        border: false,
+                    ,
+                    {
+                        columnWidth: .2,
+                        layout: 'form',
+                        border: false,
+                        items: [{
+                            xtype: 'combo',
+                            //id: 'hashType',
+                            fieldLabel: '分割符',
+                            hiddenName: 'split_str',
+                            //forceSelection : true,
+                            editable: false,
+                            anchor:'90%',
+                            store: new Ext.data.SimpleStore({
+                                fields: ['text','value'],
+                                data: [['逗号',','],['空格',"\\t"]]
+                            }),
+                            valueField: 'value',
+                            displayField: 'text',
+                            typeAhead: true,
+                            mode: 'local',
+                            triggerAction: 'all',
+                            selectOnFocus: true,
+                            allowBlank : false,// 不允许为空
+                            blankText : '请选择',// 该项如果没有选择，则提示错误信息,
+                            forceSelection : true// 必须选择一个选项
+                            //allowBlank: false,
+                        }]
 //                        items: [{
 //                            //为空
-//                            blankText: '分区名称不能为空',
+//                            blankText: '分割符不能为空',
 //                            emptyText: '',
-//
 //                            editable: false,
 //                            triggerAction: 'all',
 //                            allowBlank: false,
 //                            //为空
-//
 //                            xtype: 'textfield',
-//                            fieldLabel: '分区名称',
+//                            fieldLabel: '分割符',
 //                            id: 'org_field_partition',
 //                            anchor: '90%'
 //                        }]
-//                    } //组件结束
+                    } //组件结束
                     ,
                     {
                         columnWidth: .2,
@@ -171,10 +221,45 @@
 
                         }]
                     } //组件结束
+                    ,
+                    {
+                        columnWidth: .2,
+                        layout: 'form',
+                        border: false,
+                        items: [{
+                            xtype: 'checkboxgroup',
+                            name: 'model_type',
+                            width: 80,  //宽度220
+                            columns: 1,  //在上面定义的宽度上展示3列
+                            fieldLabel: '分区字段',
+                            items: [
+                                {boxLabel: '是否选上', name: 'org_field_partName_' + c_index}
+                            ]
+                        }]
+                    } //组件结束
                 ]
 
                 //column布局控件结束
             });
+
+            function checkAll() {
+                var el = document.getElementsByTagName('input');
+                var count=0;
+                var checkSum=0;
+                var len = el.length;
+                for(var i=0; i<len; i++) {
+                    if((el[i].type=="checkbox")) {
+                        count=count+1;
+                        if(el[i].checked==true){
+                            checkSum=checkSum+1;
+                        }
+                    }
+                }
+                if(checkSum>0&&checkSum==count){
+                    return false;
+                }
+            }
+
             //定义表单
             var simple = new Ext.FormPanel({
                 labelAlign: 'left',
@@ -194,6 +279,10 @@
                     //定义表单提交事件
                     handler: function(){
                         if (simple.form.isValid()) {//验证合法后使用加载进度条
+                            if(checkAll()==false){
+                                Ext.Msg.alert('信息', '分区字段不能全部选中！');
+                                return;
+                            }
                             Ext.MessageBox.show({
                                 title: '请稍等',
                                 msg: '正在加载...',
