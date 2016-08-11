@@ -9,6 +9,11 @@ import com.ailk.service.impl.QueryByNoRowkeyService;
 import com.google.gson.Gson;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.ByteArrayInputStream;
@@ -17,12 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 
 public class NoRowkeyQueryAction extends BaseAction {
 
@@ -52,8 +51,10 @@ public class NoRowkeyQueryAction extends BaseAction {
             ValueSet vs = new ValueSet();
             bindParams(vs, ServletActionContext.getRequest());
             String sql = vs.getString("sql");
-            QueryByNoRowkeyService service = new QueryByNoRowkeyService();
-            service.taskSubmit(sql);
+//            QueryByNoRowkeyService service = new QueryByNoRowkeyService();
+//            service.taskSubmit(sql);
+            NoRowkeyThread  noRowkeyThread = new NoRowkeyThread(sql);
+            noRowkeyThread.start();
             JsonResult result = new JsonResult();
             result.setSuccess(true);
             result.setMessage("任务提交中,请到任务清单查找最新信息。");
@@ -118,6 +119,8 @@ public class NoRowkeyQueryAction extends BaseAction {
                 statusName = "进行中";
             } else if (status == 1) {
                 statusName = "已完成";
+            } else if (status == 2) {
+                statusName = "失败";
             }
             String createDate = (String) m.get("createDate");
             String updateDate = (String) m.get("updateDate");

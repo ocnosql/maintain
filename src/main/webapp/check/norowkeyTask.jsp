@@ -68,7 +68,7 @@
                                         anchor:'90%',
                                         store: new Ext.data.SimpleStore({
                                             fields: ['text','value'],
-                                            data: [['成功','1'],['执行中','0']]
+                                            data: [['成功','1'],['失败','2'],['执行中','0']]
                                         }),
                                         valueField: 'value',
                                         displayField: 'text',
@@ -159,7 +159,12 @@
 //                debugger;
 //                alert(row[0].json.C0);
                     var taskId=row[0].json.C0;
-                    window.location=appPath+'/check/norowkeyQuery.jsp?taskId='+taskId;
+                    var status=row[0].json.C1;
+                    if(status=='已完成'){
+                        window.location=appPath+'/check/norowkeyQuery.jsp?taskId='+taskId;
+                    }else{
+                        alert('只能操作已完成的任务!');
+                    }
                 }else{
                     alert('请选中要操作的记录!');
                 }
