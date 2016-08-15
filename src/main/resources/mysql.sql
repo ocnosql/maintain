@@ -35,7 +35,7 @@ INSERT INTO `menu` VALUES ('1', '主键查询', 'check/rowkeyQuery.jsp', '');
 INSERT INTO `menu` VALUES ('1.1', '主键查询', 'check/rowkeyQuery.jsp', '1');
 INSERT INTO `menu` VALUES ('1.2', '查询前缀生成', 'check/rowkeyBuild.jsp', '1');
 INSERT INTO `menu` VALUES ('10', '数据导出', 'check/rowkeyOutput.jsp', null);
-INSERT INTO `menu` VALUES ('10.1', '主键导出(电话号码+时间)', 'check/rowkeyOutput.jsp', '10');
+INSERT INTO `menu` VALUES ('10.1', '主键导出', 'check/rowkeyOutput.jsp', '10');
 INSERT INTO `menu` VALUES ('10.2', '主键导出(批量)', 'check/rowkeyBatchOutput.jsp', '10');
 INSERT INTO `menu` VALUES ('2', '统计分析', 'check/sql.jsp', '');
 INSERT INTO `menu` VALUES ('3', '详单条数稽核', 'check/tableCount.jsp', null);
