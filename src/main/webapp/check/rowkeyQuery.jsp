@@ -31,7 +31,8 @@ var searchPanel = new Ext.FormPanel(
 					autoHeight: true,
 					defaults:{layout: 'form',border:false,columnWidth:.5},
 					items:[
-						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'select sum(to_number(up_flow))  from GPRS_201606',
+						//{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'select sum(to_number(up_flow))  from GPRS_201606',
+						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'',
 							enableKeyEvents:true,
 							listeners : {
 								keypress : function(obj, e){
