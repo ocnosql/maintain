@@ -183,7 +183,7 @@
                 ],
                 buttons: [
                   {
-                    text:'查询',
+                    text:'查询任务',
                     id:"query_button",
                     cls: 'x-icon-btn',
                     listeners:{
