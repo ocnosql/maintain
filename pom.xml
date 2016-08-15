@@ -31,6 +31,11 @@
             <version>${ocnosql.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.ailk.oci</groupId>
+            <artifactId>ocnosql-tools</artifactId>
+            <version>${ocnosql.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
@@ -90,6 +95,11 @@
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
             <version>2.6.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.phoenix</groupId>
+            <artifactId>phoenix-core</artifactId>
+            <version>4.1.0</version>
         </dependency>
     </dependencies>
 
