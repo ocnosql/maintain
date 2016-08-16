@@ -59,12 +59,14 @@ public class QueryByNoRowkeyService implements IQueryService {
 
                 totalCount=hiveDao.hiveGetRowNums(tableName);
                 //totalCount = HiveJdbc.queryTotalCount(tableName);
-                String update_task = "update qrytask set status=?,updateDate=now(),timeDiff=TIMESTAMPDIFF(SECOND,createDate,updateDate),totalCount=?,cloumnsSql=? where tempTable=?;";
-                Object[] a2 = new Object[4];
+                String filePath = HADOOP_FILE_PATH + tableName;
+                String update_task = "update qrytask set status=?,updateDate=now(),timeDiff=TIMESTAMPDIFF(SECOND,createDate,updateDate),totalCount=?,cloumnsSql=?,filePath=? where tempTable=?;";
+                Object[] a2 = new Object[5];
                 a2[0] = 1;//成功
                 a2[1] = String.valueOf(totalCount);
                 a2[2] = cloumns_table;
-                a2[3] = tableName;
+                a2[3] = filePath;
+                a2[4] = tableName;
                 dao.executeUpdate(update_task, a2);
                 LOG.info("update qrytask success");
             } else {
@@ -107,6 +109,7 @@ public class QueryByNoRowkeyService implements IQueryService {
         if(StringUtils.isNotBlank(status)){
             sqlcon=sqlcon+" and status="+status;
         }
+        sqlcon=sqlcon+" order by createDate desc";
         String sql="select * from qrytask "+sqlcon+" limit " + limit * pageNow + "," + limit + "";
         String sql2="select count(*) as C from qrytask "+sqlcon;
         long totalCount =0;

@@ -41,7 +41,7 @@
       var tablespace = new Ext.data.JsonStore({
         fields: ['TABLE_SCHEM'],
         //url : appPath + "deleteQuery!getTableSpaces.action",
-        url : appPath + "/RowkeyBatchOutputQueryAction_getTableSpaces.action",
+        url : appPath + "/CommonAction_getTableSpaces.action",
         autoLoad : true,
         root : "root"
       });
@@ -49,7 +49,7 @@
       var tables = new Ext.data.JsonStore({
         fields: ['TABLE_NAME'],
         //url : appPath + "deleteQuery!getTables.action",
-        url : appPath + "/RowkeyBatchOutputQueryAction_getTables.action",
+        url : appPath + "/CommonAction_getTables.action",
         autoLoad : true,
         root : "root"
       });
