@@ -127,12 +127,13 @@ public class NoRowkeyQueryAction extends BaseAction {
             String timeDiff = (String) m.get("timeDiff");
             String totalCount = (String) m.get("totalCount");
 //            String tempTable=(String) m.get("tempTable");
+            String filePath = (String) m.get("filePath");
             String querySql = (String) m.get("querySql");
-            dataList.add(new String[]{keyId, statusName, createDate, updateDate, timeDiff, totalCount, querySql});
+            dataList.add(new String[]{keyId, statusName, createDate, updateDate, timeDiff, totalCount,filePath,querySql});
         }
         Map<String, String[]> fields = new HashMap<String, String[]>();
         Map<String, List> testData2 = new HashMap<String, List>();
-        fields.put("taskList", new String[]{"主键", "任务状态", "任务执行开始时间", "任务执行结束时间", "任务时长/秒", "总行数", "查询语句"});
+        fields.put("taskList", new String[]{"编号", "任务状态", "任务执行开始时间", "任务执行结束时间", "任务时长/秒", "总行数","数据文件路径","查询语句"});
         testData2.put("taskList", dataList);
         this.setAjaxStr(ResultBuild.buildJson(fields.get("taskList"), testData2.get("taskList"), totalCountByPage));
         return AJAXRTN;
