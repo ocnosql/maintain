@@ -22,6 +22,12 @@ public class HiveDao {
         return totalCount;
     }
 
+    public List<Map> hiveGetColumns(String tableName) {
+        String sql = "select c.COLUMN_NAME from COLUMNS_V2 c WHERE c.CD_ID=(select b.CD_ID from TBLS a LEFT JOIN SDS b on a.SD_ID=b.SD_ID where TBL_NAME='" + tableName + "');";
+        List<Map> list = hiveDao.query(sql);
+        return list;
+    }
+
 
 }
 

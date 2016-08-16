@@ -47,14 +47,21 @@ public class QueryByNoRowkeyService implements IQueryService {
 //            boolean flag=false;
             if (flag) {
                 LOG.info("create table success");
-                List<Map> cloumns = HiveJdbc.query("select * from " + tableName + " limit 1");
-                Map record = cloumns.get(0);
-                Iterator it = record.keySet().iterator();
+//                List<Map> cloumns = HiveJdbc.query("select * from " + tableName + " limit 1");
                 String cloumns_table = "";
-                while (it.hasNext()) {
-                    String columnName = (String) it.next();
-                    cloumns_table = cloumns_table + columnName.replace(tableName + ".", "") + ",";
+                List<Map> cloumnsList=hiveDao.hiveGetColumns(tableName);
+                for(int i=0;i<cloumnsList.size();i++){
+                    Map map666=cloumnsList.get(i);
+                    String COLUMN_NAME=(String)map666.get("COLUMN_NAME");
+                    cloumns_table = cloumns_table +COLUMN_NAME+",";
                 }
+//                Map record = cloumns.get(0);
+//                Iterator it = record.keySet().iterator();
+//                String cloumns_table = "";
+//                while (it.hasNext()) {
+//                    String columnName = (String) it.next();
+//                    cloumns_table = cloumns_table + columnName.replace(tableName + ".", "") + ",";
+//                }
                 cloumns_table = cloumns_table.substring(0, cloumns_table.length() - 1);
 
                 totalCount=hiveDao.hiveGetRowNums(tableName);
