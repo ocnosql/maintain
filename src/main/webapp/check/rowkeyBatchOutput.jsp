@@ -220,24 +220,30 @@
                         Ext.MessageBox.alert('提示', "请先上传文件!");
                         return ;
                       }
+
+                      Ext.Msg.confirm('提示','确定生成任务？',
+                              function(btn){
+                                if(btn=='yes'){
+                                  searchPanel.getForm().submit({//客户端的数据提交给服务器
+                                    waitTitle:"请稍候",
+                                    waitMsg:"正在提交表单数据，请稍候。。。。。。",
+                                    //如果submit失敗，執行這一個function
+                                    failure:function(form1,action){
+                                      Ext.MessageBox.hide();
+                                      Ext.MessageBox.alert('提示',"没有生成任务，请确定已经选择文件");
+                                      Ext.getCmp('query_button').fireEvent('click');//刷新
+                                    },
+                                    success: function(form1,action){
+                                      Ext.MessageBox.hide();
+                                      Ext.MessageBox.alert('',"生成任务成功");
+                                      Ext.getCmp('query_button').fireEvent('click');//刷新
+                                    }
+                                  })
+                                }else{}
+                              },this);
+
                       //searchPanel..setParameter("start",0);
                       //searchPanel.getForm().setParameter("limit",dynamicGrid.getBottomToolbar().pageSize);
-                      searchPanel.getForm().submit({//客户端的数据提交给服务器
-                        waitTitle:"请稍候",
-                        waitMsg:"正在提交表单数据，请稍候。。。。。。",
-                        //如果submit失敗，執行這一個function
-                        failure:function(form1,action){
-                          Ext.MessageBox.hide();
-                          Ext.MessageBox.alert('提示',"没有生成任务，请确定已经选择文件");
-                          Ext.getCmp('query_button').fireEvent('click');//刷新
-                        },
-                        success: function(form1,action){
-                          Ext.MessageBox.hide();
-                          Ext.MessageBox.alert('',"生成任务成功");
-                          Ext.getCmp('query_button').fireEvent('click');//刷新
-                        }
-                      })
-
                     }
                   },
                   {
