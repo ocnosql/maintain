@@ -34,4 +34,25 @@ public class CreateTableAction extends BaseAction {
         this.setAjaxStr(gs.toJson(result));
         return AJAXRTN;
     }
+
+    public String createTable2() {
+        ValueSet vs = new ValueSet();
+        bindParams(vs, ServletActionContext.getRequest());
+        CreateTableService service = new CreateTableService();
+        Map map = service.createHiveTable2(vs);
+        boolean flag=(Boolean)map.get("flag");
+        String msg=(String)map.get("msg");
+        Gson gs = new Gson();
+        JsonResult result = new JsonResult();
+        if (flag) {
+            result.setMessage("创建表成功。");
+            LOG.info(" createTable action success");
+        } else {
+            result.setMessage("创建表失败:"+msg);
+            LOG.info(" createTable action failure");
+        }
+        this.setAjaxStr(gs.toJson(result));
+        return AJAXRTN;
+    }
+
 }

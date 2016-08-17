@@ -25,7 +25,7 @@ public class CommonDao {
     }
 
     public List<Map<String, Object>> queryAllColumnsByTable(String schema, String table) throws SQLException{
-        String sql = "select COLUMN_NAME from system.catalog where table_name = '" + table +"' ";
+        String sql = "select COLUMN_NAME, COLUMN_FAMILY from system.catalog where table_name = '" + table +"' and COLUMN_NAME is not null";
         if(schema != null && "DEFAULT".equals(schema)) {
             sql = sql + " and table_schem is null";
         } else {
