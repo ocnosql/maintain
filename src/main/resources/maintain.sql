@@ -108,6 +108,7 @@ CREATE TABLE `qrytask` (
   `tempTable` varchar(50) DEFAULT NULL COMMENT '临时表名',
   `querySql` varchar(2000) DEFAULT NULL COMMENT '查询语句',
   `cloumnsSql` varchar(2000) DEFAULT NULL COMMENT '列名',
+  `filePath`  varchar(500) DEFAULT NULL COMMENT '数据文件路径',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

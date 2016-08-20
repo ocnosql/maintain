@@ -1,6 +1,8 @@
 package com.ailk.service.impl;
 
 import com.ailk.core.exception.AppRuntimeException;
+import com.ailk.dao.BaseDao;
+import com.ailk.dao.HiveDao;
 import com.ailk.dao.HiveJdbc;
 import com.ailk.model.ResultDTO;
 import com.ailk.model.ValueSet;
@@ -12,7 +14,8 @@ import java.util.*;
 
 public class CreateTableService {
     public static final Log LOG = LogFactory.getLog(CreateTableService.class);
-
+    BaseDao dao = new BaseDao("ocnosql");
+    private HiveDao hiveDao = new HiveDao();
     /**
      * 创建表
      *
@@ -136,6 +139,13 @@ public class CreateTableService {
             map = HiveJdbc.createHiveTable(sb.toString());
             boolean flag = (Boolean) map.get("flag");
             if (flag) {
+                //插入create_hiveTable数据
+                String insert_task = "insert into create_hiveTable(hiveTableName,hbaseTableName,createDate,status) values(?,?,now(),?);";
+                Object[] a = new Object[3];
+                a[0] =table_name;
+                a[1] = table_name;
+                a[2] = 1;
+                dao.executeUpdate(insert_task, a);
                 LOG.info("createHiveTable service success");
             } else {
                 LOG.info("createHiveTable service failure");
@@ -145,6 +155,48 @@ public class CreateTableService {
         }
         return map;
     }
+
+
+    /**
+     * 任务分页
+     *
+     * @param vs
+     * @return
+     */
+    public ResultDTO loadDataByPage(ValueSet vs) {
+        int start = Integer.parseInt(vs.getString("start"));
+        int limit = Integer.parseInt(vs.getString("limit"));
+        long pageNow = start == 0 ? 0 : start / limit;
+        String sqlcon=" where 1=1 ";
+        sqlcon=sqlcon+" order by createDate desc";
+        String sql="select * from create_hiveTable "+sqlcon+" limit " + limit * pageNow + "," + limit + "";
+        String sql2="select count(*) as C from create_hiveTable "+sqlcon;
+        long totalCount =0;
+        List<Map> list = dao.query(sql);
+        List<Map> listCount=dao.query(sql2);
+        totalCount = Long.parseLong(listCount.get(0).get("C").toString());
+
+        ResultDTO dto = new ResultDTO();
+        dto.setRecords(list);
+        dto.setTotalCount(totalCount);
+        dto.setHasPaged(true);
+        dto.setSuccess(true);
+        return dto;
+    }
+
+    public List getTableName() {
+        String sql=" select hiveTableName from create_hiveTable where status=1 ";
+        List resultList=new ArrayList();
+        List<Map> list = dao.query(sql);
+        for(int i=0;i<list.size();i++){
+            Map map=list.get(i);
+            resultList.add(map.get("hiveTableName").toString());
+        }
+        return resultList;
+    }
+
+
+
 
 
 }

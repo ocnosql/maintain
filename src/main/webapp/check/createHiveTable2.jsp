@@ -37,6 +37,28 @@
             var pageSize = 100;
             var gid = null;
 
+            var dynamicGrid = new Ext.grid.DynamicGrid({
+                id:'test',
+                title: '数据展示列表',
+                //renderTo: 'dynamic-grid',
+                storeUrl:"<%=appPath%>/CreateTableAction_queryTable.action",
+                width : '100%',
+                height: 500,
+                rowNumberer: true,
+//                checkboxSelModel: true,
+                sm: new Ext.grid.CheckboxSelectionModel(),
+
+                bbar : new Ext.PagingToolbar({
+                    //plugins: new Ext.ux.Andrie.pPageSize(),
+                    pageSize : pageSize,
+                    displayInfo : true,
+                    displayMsg : '显示第{0}到{1}条数据,共{2}条',
+                    emptyMsg : "没有数据",
+                    beforePageText : "第",
+                    afterPageText : '页 共{0}页, 每页显示'+ pageSize +'条'
+                })
+            });
+
             var tablespace = new Ext.data.JsonStore({
                 fields: ['TABLE_SCHEM'],
                 url : appPath + "/CommonAction_getTableSpaces.action",
@@ -46,7 +68,7 @@
 
             var tables = new Ext.data.JsonStore({
                 fields: ['TABLE_NAME'],
-                url : appPath + "/CommonAction_getTables.action",
+                url : appPath + "/CommonAction_getTablesHive.action",
                 autoLoad : true,
                 root : "root"
             });
@@ -136,21 +158,37 @@
 
 
             function formSubmit(){
-                var a =searchPanel.getForm().getValues();
-                Ext.Ajax.request({
-                    url: appPath + "/CreateTableAction_createTable2.action",
-                    method:'post',
-                    params:a ,
-                    success:function(req){
-                        var obj = Ext.util.JSON.decode(req.responseText);
-                        if(obj.success){
-                            //Ext.getCmp('rowkey').setValue(obj.rowkey);
-                            Ext.Msg.alert('返回信息',obj.message);
-                        }else{
-                            Ext.Msg.alert('错误',obj.message);
-                        }
+                var table_name=Ext.getCmp('table_name').getValue();
+                var table_schem=Ext.getCmp('table_schem').getValue();
+                if(table_schem==''){
+                    Ext.Msg.alert('提示信息',"表空间不能为空!");
+                    return;
+                }
+                if(table_name==''){
+                    Ext.Msg.alert('提示信息',"表不能为空!");
+                    return;
+                }
+                Ext.Msg.confirm('系统提示','确定要提交吗？',function(btn){
+                    if(btn=='yes'){
+                        var a =searchPanel.getForm().getValues();
+                        Ext.Ajax.request({
+                            url: appPath + "/CreateTableAction_createTable2.action",
+                            method:'post',
+                            params:a ,
+                            success:function(req){
+                                var obj = Ext.util.JSON.decode(req.responseText);
+                                if(obj.success){
+                                    //Ext.getCmp('rowkey').setValue(obj.rowkey);
+                                    Ext.Msg.alert('返回信息',obj.message);
+                                    dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize} });
+                                }else{
+                                    Ext.Msg.alert('错误',obj.message);
+                                }
+                            }
+                        });
                     }
-                });
+                },this);
+
             }
 
             Ext.MyViewport=Ext.extend(Ext.Viewport ,{
@@ -159,13 +197,18 @@
                 autoScroll: true,
                 initComponent: function(){
                     this.items=[
-                        searchPanel
+                        searchPanel,
+                        dynamicGrid
                     ], Ext.MyViewport.superclass.initComponent.call(this);
                 }
             });
 
             var viewport = new Ext.MyViewport();
             //Ext.getCmp('filepath_server').hide();
+            dynamicGrid.store.load({ params: { start: 0,
+                limit: dynamicGrid.getBottomToolbar().pageSize
+            }
+            });
 
         });
     </script>

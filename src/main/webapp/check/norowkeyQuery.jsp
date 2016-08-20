@@ -64,14 +64,24 @@
 							cls: 'x-icon-btn',
 							handler: function(){
 								//dynamicGrid.getSelectionModel().selectAll();
-								export1("1");
+								var count=dynamicGrid.getStore().getCount();
+								if(count==0){
+									Ext.Msg.alert('提示信息',"没有数据!");
+								}else{
+									export1("1");
+								}
 							}
 						},{
 							text:'导出Excel',
 							cls: 'x-icon-btn',
 							handler: function(){
 								//Utils.copySelectedRows(dynamicGrid);
-								export1("0");
+								var count=dynamicGrid.getStore().getCount();
+								if(count==0){
+									Ext.Msg.alert('提示信息',"没有数据!");
+								}else{
+									export1("0");
+								}
 							}
 						}]
 					}

@@ -30,7 +30,7 @@ var searchPanel = new Ext.FormPanel(
 					autoHeight: true,
 					defaults:{layout: 'form',border:false,columnWidth:.5},
 					items:[
-						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'select sum(to_number(up_flow))  from GPRS_201606',
+						{items: [{xtype:'textarea',fieldLabel: 'SQL',id: 'sql', name:'sql',anchor:'90%', value:'',
 							enableKeyEvents:true,
 							listeners : {
 								keypress : function(obj, e){
@@ -45,10 +45,10 @@ var searchPanel = new Ext.FormPanel(
 				text:'提交',
 				cls: 'x-icon-btn',
 				handler: function(){
-					Ext.Msg.alert('提示', '任务提交成功', function () {
+					//Ext.Msg.alert('提示', '任务提交成功', function () {
 						//window.location='sqlDetail.jsp';
 						queryRowkey();
-					});
+					//});
 				}
 			}]
 		}
@@ -69,22 +69,34 @@ Ext.MyViewport=Ext.extend(Ext.Viewport ,{
 var viewport = new Ext.MyViewport();
 
 function queryRowkey(){
-	Ext.Ajax.request({
-	    url: appPath + "/NoRowkeyQueryAction_taskSubmit.action",
-	    method:'post',
-	    params:{
-	     sql: Ext.getCmp('sql').getValue()
-	   },
-	   success:function(req){
-		  var obj = Ext.util.JSON.decode(req.responseText);
-	      if(obj.success){  
-	    	  //Ext.getCmp('rowkey').setValue(obj.rowkey);
-			  Ext.Msg.alert('成功',obj.message);
-	      }else{ 
-	    	  Ext.Msg.alert('错误',obj.message);
-	      }
-	   }
-	 });
+	var sql=Ext.getCmp('sql').getValue();
+	if(sql==''||sql=="undefined"){
+		Ext.Msg.alert('提示信息',"不能为空!");
+		return;
+	}
+	Ext.Msg.confirm('系统提示','确定要提交吗？',function(btn){
+		if(btn=='yes'){
+			Ext.Ajax.request({
+				url: appPath + "/NoRowkeyQueryAction_taskSubmit.action",
+				method:'post',
+				params:{
+				 sql: Ext.getCmp('sql').getValue()
+			   },
+			   success:function(req){
+				  var obj = Ext.util.JSON.decode(req.responseText);
+				  if(obj.success){
+					  //Ext.getCmp('rowkey').setValue(obj.rowkey);
+					  Ext.Msg.alert('成功',obj.message);
+				  }else{
+					  Ext.Msg.alert('错误',obj.message);
+				  }
+			   }
+			 });
+		}else{
+
+		}
+	},this);
+
 }
 
 
