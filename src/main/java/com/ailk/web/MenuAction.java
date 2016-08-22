@@ -248,6 +248,10 @@ public class MenuAction extends BaseAction{
 
         List<Menu> menuListReturn = new ArrayList<Menu>();
         for(Menu menu : menuList) {
+            //默认表空间时 表空间名用DEFAULT
+            if(menu.getText()==null){
+                menu.setText("DEFAULT");
+            }
             if(StringUtils.isNotEmpty(menu.getPid())) {
                 Menu parent = indexMap.get(menu.getPid());
                 parent.addChild(menu);

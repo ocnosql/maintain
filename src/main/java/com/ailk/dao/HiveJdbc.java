@@ -7,10 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lihui on 2016/7/13.
@@ -91,7 +88,7 @@ public class HiveJdbc {
      * @param limit
      * @return
      */
-    public static List<Map> queryByPage(String sql, int start, int limit) {
+    public static List<Map> queryByPage(String sql,String tableName,int start, int limit) {
         log.info("execute queryByPage : " + sql);
         Connection conn = null;
         Statement stmt = null;
@@ -110,9 +107,9 @@ public class HiveJdbc {
                 if (count > start) {
                     for (int i = 1; i <= columnCount; i++) {
                         if (rs.getObject(i) instanceof java.util.Date) {
-                            record.put(meta.getColumnName(i), DateUtil.format(rs.getTimestamp(i)));
+                            record.put(meta.getColumnName(i).replace(tableName+".",""), DateUtil.format(rs.getTimestamp(i)));
                         } else {
-                            record.put(meta.getColumnName(i), rs.getObject(i));
+                            record.put(meta.getColumnName(i).replace(tableName+".",""), rs.getObject(i));
                         }
                     }
                     recordList.add(record);
@@ -148,7 +145,7 @@ public class HiveJdbc {
         return totalCount;
     }
 
-    public static boolean queryCreateTable(String sql, String table) {
+    public static boolean queryCreateTable(String sql, String table) throws AppRuntimeException{
         boolean flag = false;
         String temp_sql = "CREATE TABLE " + table + " row format delimited fields terminated by '\t' as " + sql;
         log.info("execute queryCreateTable : " + temp_sql);
@@ -162,7 +159,8 @@ public class HiveJdbc {
                 flag = true;
             }
         } catch (Exception e) {
-            throw new AppRuntimeException(e);
+//            throw new AppRuntimeException(e);
+            log.error("execute queryCreateTable Exception:"+e.getMessage());
         } finally {
             if (stmt != null) {
                 try {
@@ -173,6 +171,38 @@ public class HiveJdbc {
             }
         }
         return flag;
+    }
+
+    public static Map createHiveTable(String sql) throws AppRuntimeException{
+        boolean flag = false;
+        log.info("execute createHiveTable : " + sql);
+        Connection conn = null;
+        Statement stmt = null;
+        Map map=new HashMap();
+        try {
+            conn = HiveJdbc.getConnection();
+            stmt = conn.createStatement();
+            int a = stmt.executeUpdate(sql);
+            if (a == 0) {
+                flag = true;
+                map.put("flag",true);
+                map.put("msg","success");
+            }
+        } catch (Exception e) {
+//            throw new AppRuntimeException(e);
+            log.error("execute queryCreateTable Exception:"+e.getMessage());
+            map.put("flag",false);
+            map.put("msg",e.getMessage());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (Exception e) {
+                    log.error(e);
+                }
+            }
+        }
+        return map;
     }
 
     public static void test() {

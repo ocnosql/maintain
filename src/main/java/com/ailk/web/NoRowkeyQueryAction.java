@@ -9,6 +9,11 @@ import com.ailk.service.impl.QueryByNoRowkeyService;
 import com.google.gson.Gson;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.ByteArrayInputStream;
@@ -17,12 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 
 public class NoRowkeyQueryAction extends BaseAction {
 
@@ -52,8 +51,10 @@ public class NoRowkeyQueryAction extends BaseAction {
             ValueSet vs = new ValueSet();
             bindParams(vs, ServletActionContext.getRequest());
             String sql = vs.getString("sql");
-            QueryByNoRowkeyService service = new QueryByNoRowkeyService();
-            service.taskSubmit(sql);
+//            QueryByNoRowkeyService service = new QueryByNoRowkeyService();
+//            service.taskSubmit(sql);
+            NoRowkeyThread  noRowkeyThread = new NoRowkeyThread(sql);
+            noRowkeyThread.start();
             JsonResult result = new JsonResult();
             result.setSuccess(true);
             result.setMessage("任务提交中,请到任务清单查找最新信息。");
@@ -118,18 +119,21 @@ public class NoRowkeyQueryAction extends BaseAction {
                 statusName = "进行中";
             } else if (status == 1) {
                 statusName = "已完成";
+            } else if (status == 2) {
+                statusName = "失败";
             }
             String createDate = (String) m.get("createDate");
             String updateDate = (String) m.get("updateDate");
             String timeDiff = (String) m.get("timeDiff");
             String totalCount = (String) m.get("totalCount");
 //            String tempTable=(String) m.get("tempTable");
+            String filePath = (String) m.get("filePath");
             String querySql = (String) m.get("querySql");
-            dataList.add(new String[]{keyId, statusName, createDate, updateDate, timeDiff, totalCount, querySql});
+            dataList.add(new String[]{keyId, statusName, createDate, updateDate, timeDiff, totalCount,filePath,querySql});
         }
         Map<String, String[]> fields = new HashMap<String, String[]>();
         Map<String, List> testData2 = new HashMap<String, List>();
-        fields.put("taskList", new String[]{"主键", "任务状态", "任务执行开始时间", "任务执行结束时间", "任务时长/秒", "总行数", "查询语句"});
+        fields.put("taskList", new String[]{"编号", "任务状态", "任务执行开始时间", "任务执行结束时间", "任务时长/秒", "总行数","数据文件路径","查询语句"});
         testData2.put("taskList", dataList);
         this.setAjaxStr(ResultBuild.buildJson(fields.get("taskList"), testData2.get("taskList"), totalCountByPage));
         return AJAXRTN;
