@@ -88,7 +88,7 @@ var viewport = new Ext.Viewport({
             frame:true,
             border:true,
             collapsible:true,
-			autoScroll:false,
+			autoScroll:true,
             width: 200,  
             title: '菜单',
             items: [treePanel],
