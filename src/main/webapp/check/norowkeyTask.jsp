@@ -52,10 +52,6 @@
                                 autoHeight: true,
                                 defaults:{layout: 'form',border:false,columnWidth:.5},
                                 items:[
-
-//                                    {items: [{xtype:'textfield',enableKeyEvents:true,fieldLabel: '开始日期',name: 'startDate',value:'20121230',anchor:'90%'
-//
-//                                    }]},
                                     {items:[{xtype:'datetimefield',fieldLabel: '开始日期',name: 'startDate',value:'',anchor:'50%'}]},
                                     {items:[{xtype:'datetimefield',fieldLabel: '结束日期',name: 'endDate',value:'',anchor:'50%'}]},
                                     {items: [{
