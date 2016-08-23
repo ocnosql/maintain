@@ -77,13 +77,13 @@
                                         triggerAction: 'all',
                                         selectOnFocus: true,
                                         //allowBlank: false,
-                                        listeners: {
+                                            listeners: {
                                             afterRender: function(combo) {
                                                 /* 		var firstValue = combo.getStore().reader.arrayData[0][1];
                                                  combo.setValue(firstValue);//同时下拉框会将与name为firstValue值对应的 text显示   */
                                             }
                                         }
-                                    }]},
+                                    }]}
 
                                 ]//items
                             }
