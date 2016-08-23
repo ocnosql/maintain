@@ -149,7 +149,6 @@
                         }]
                 }]
             });
-            ``
 
             var configPanel = new Ext.FormPanel({
                 labelAlign: 'left',
