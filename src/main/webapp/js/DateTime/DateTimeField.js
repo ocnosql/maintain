@@ -1,4 +1,5 @@
-﻿Ext.BLANK_IMAGE_URL = "/maintain/js/DateTime/s.gif";
+﻿
+Ext.BLANK_IMAGE_URL = "/maintain/js/DateTime/s.gif";
 Ext.ns('Ext.ux.form');
 Ext.ux.form.TimePickerField = function(config){
     Ext.ux.form.TimePickerField.superclass.constructor.call(this, config);
