@@ -104,8 +104,11 @@ var viewport = new Ext.Viewport({
     viewport.doLayout();
 	var rootNode = treePanel.getRootNode();
     rootNode.expand(true);
+	var isClickedTableschem = false;
 	treePanel.on('click', function(node, e){
 		if(node.attributes.murl=="tableschem"){
+			if(isClickedTableschem) return;
+			isClickedTableschem = true;
 			node.removeAll();
 			//获取所有的表空间
 			Ext.Ajax.request({
@@ -120,12 +123,14 @@ var viewport = new Ext.Viewport({
 							node.appendChild(temp.children);
 						}
 					}
-					node.expand(true);
 					node.render();
+					node.expand(true);
 					treePanel.render();
+					isClickedTableschem = false;
 				},
 				failure: function (response, options) {
 					//Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+					isClickedTableschem = false;
 				}
 			});
 		}
