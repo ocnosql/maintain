@@ -15,14 +15,14 @@ public class ImportDao extends BaseDao{
     }
 
     public void insertConfig(ImportConfig ic) {
-        String sql = "insert importconfig(cname, separatorx, loadType, inputPath, rowkey, generator, outputPath, algocolumn, schemax, tablex, callback) values(?,?,?,?,?,?,?,?,?,?)";
-        String[] params = {ic.getCname(), ic.getSeparator(), ic.getLoadType(), ic.getInputPath(), ic.getRowkey(), ic.getGenerator(), ic.getOutputPath(), ic.getAlgocolumn(), ic.getSchema(), ic.getTable()};
+        String sql = "insert importconfig(cname, separatorx, inputPath, rowkey, generator, outputPath, algocolumn, schemax, tablex, callback) values(?,?,?,?,?,?,?,?,?,?)";
+        String[] params = {ic.getCname(), ic.getSeparator(), ic.getInputPath(), ic.getRowkey(), ic.getGenerator(), ic.getOutputPath(), ic.getAlgocolumn(), ic.getSchema(), ic.getTable(), ic.getCallback()};
         executeUpdate(sql, params);
     }
 
     public void updateConfig(ImportConfig ic) {
-        String sql = "update importconfig set cname = ?, separatorx = ?, loadType = ?, inputPath = ?, rowkey = ?, generator = ?, outputPath = ?, algocolumn = ?, schemax = ?, tablex = ? , callback = ? where id = ?";
-        Object[] params = {ic.getCname(), ic.getSeparator(), ic.getLoadType(), ic.getInputPath(), ic.getRowkey(), ic.getGenerator(), ic.getOutputPath(), ic.getAlgocolumn(), ic.getSchema(), ic.getTable(), ic.getCallback(), ic.getId()};
+        String sql = "update importconfig set cname = ?, separatorx = ?, inputPath = ?, rowkey = ?, generator = ?, outputPath = ?, algocolumn = ?, schemax = ?, tablex = ? , callback = ? where id = ?";
+        Object[] params = {ic.getCname(), ic.getSeparator(), ic.getInputPath(), ic.getRowkey(), ic.getGenerator(), ic.getOutputPath(), ic.getAlgocolumn(), ic.getSchema(), ic.getTable(), ic.getCallback(), ic.getId()};
         super.executeUpdate(sql, params);
     }
 
