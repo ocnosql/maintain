@@ -15,6 +15,7 @@ public class UserService {
 
     public ResultDTO addUser(User user){
         //先查询user是否已经存在
+        //
         BaseDao dao = new BaseDao("ocnosql");
         ResultDTO resultDTO = new ResultDTO();
         try {
