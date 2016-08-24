@@ -6,14 +6,13 @@ import com.ailk.model.ValueSet;
 import com.ailk.model.ext.JsonResult;
 import com.ailk.model.ext.ResultBuild;
 import com.ailk.oci.ocnosql.common.rowkeygenerator.RowKeyGenerator;
-import com.ailk.oci.ocnosql.common.util.MD5Util;
 import com.ailk.service.IQueryService;
 import com.ailk.service.impl.QueryByRowkeyService;
+import com.ailk.util.GeneratorMD5;
 import com.google.gson.Gson;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import com.ailk.oci.ocnosql.common.rowkeygenerator.MD5RowKeyGenerator;
 
 /**
  * Created by wangkai8 on 16/7/8.
@@ -59,10 +58,10 @@ public class RowkeyQueryAction extends BaseAction {
 
     public String getmd5(){
         String rowkey = ServletActionContext.getRequest().getParameter("phoneNum");
-        RowKeyGenerator generator = new MD5RowKeyGenerator();
+        RowKeyGenerator generator = new GeneratorMD5();
         try{
             if(generator!=null){
-                rowkey = (String) generator.generate(rowkey);
+                rowkey = (String) generator.generatePrefix(rowkey);
             }
             this.setAjaxStr("{\"success\": true, \"rowkey\": \""+ rowkey +"\"}");
         }catch(Exception e){
