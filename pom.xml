@@ -248,7 +248,7 @@
             <artifactId>org.apache.axis2.osgi</artifactId>
             <version>1.6.2</version>
         </dependency>
-        <!-- axis2 -->
+        <!-- axis2 1223-->
 
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
