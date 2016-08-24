@@ -47,6 +47,10 @@ var searchPanel = new Ext.FormPanel(
 				text:'查询',
 				cls: 'x-icon-btn',
 				handler: function() {
+					if(Ext.getCmp('sql').getValue()==null||Ext.getCmp('sql').getValue()==''){
+						Ext.MessageBox.alert('提示', "请输入查询语句!");
+						return ;
+					}
                    gid = null;
                    dynamicGrid.store.baseParams.gid = null;
 				   var a = searchPanel.getForm().getValues();
