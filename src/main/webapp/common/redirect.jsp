@@ -10,10 +10,19 @@ if("1".equals(isAjaxRequest)){
 	}
 }else{%>
 	<script>
-		if(window.parent != null){
+		/**
+		 if(window.parent != null){
 			window.top.location.href = '<%=request.getContextPath()%>/login.jsp';
 		}else{
 			window.location.href='<%=request.getContextPath()%>/login.jsp';
+		}
+		 **/
+		var errorMsg = "会话失效，请重新登录！";
+		var isSessionTimeout = '1';
+		if(window.parent != null){
+			window.top.location.href = '<%=request.getContextPath()%>/login4A.jsp?isSessionTimeout='+isSessionTimeout;
+		}else{
+			window.location.href = '<%=request.getContextPath()%>/login4A.jsp?isSessionTimeout='+isSessionTimeout;
 		}
 	</script>
 <%}%>
