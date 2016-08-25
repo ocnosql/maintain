@@ -6,9 +6,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * Created by scj on 2016/8/23.
  */
 @XStreamAlias("BODY")
-public class UpdateAppAcctSoap_ResFBODY {
+public class UpdateAppAcctSoap_RspFBODY {
 
-    public UpdateAppAcctSoap_ResFBODY(){}
+    public UpdateAppAcctSoap_RspFBODY(){}
 
     /**
      *执行失败的操作中的关键标志，此处填写变更失败的从帐号登录名。	String	16
@@ -29,7 +29,7 @@ public class UpdateAppAcctSoap_ResFBODY {
     public String ERRDESC;
 
 
-    public UpdateAppAcctSoap_ResFBODY(String KEY, String ERRCODE, String ERRDESC){
+    public UpdateAppAcctSoap_RspFBODY(String KEY, String ERRCODE, String ERRDESC){
         this.KEY = KEY;
         this.ERRCODE = ERRCODE;
         this.ERRDESC = ERRDESC;

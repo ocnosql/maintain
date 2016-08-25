@@ -6,9 +6,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * Created by scj on 2016/8/23.
  */
 @XStreamAlias("BODY")
-public class UpdateAppAcctSoap_ResTBODY {
+public class UpdateAppAcctSoap_RspTBODY {
 
-    public UpdateAppAcctSoap_ResTBODY(){}
+    public UpdateAppAcctSoap_RspTBODY(){}
 
     /**
      *变更模式，可选值为add、delete、change、chgstatus、resetpwd，分别帐号新增、帐号修改、帐号删除、帐号加/解锁、重置密码操作。	String	16
@@ -40,7 +40,7 @@ public class UpdateAppAcctSoap_ResTBODY {
     @XStreamAlias("ERRDESC")
     public String ERRDESC;
 
-    public UpdateAppAcctSoap_ResTBODY(String MODIFYMODE, String USERID, String LOGINNO, String RSP, String ERRDESC){
+    public UpdateAppAcctSoap_RspTBODY(String MODIFYMODE, String USERID, String LOGINNO, String RSP, String ERRDESC){
         this.MODIFYMODE = MODIFYMODE;
         this.USERID = USERID;
         this.LOGINNO = LOGINNO;

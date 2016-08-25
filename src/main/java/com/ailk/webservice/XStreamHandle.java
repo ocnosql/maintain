@@ -17,7 +17,7 @@ public class XStreamHandle {
          return sw.toString();
          */
         // 以格式化的方式输出XML
-        String title = "<?xml version='1.0' encoding=’UTF-8’?>";
+        String title = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         String content =  xstream.toXML(obj);
         if(content==null) return  null;
         if(addTitle) content = title+"\r\n"+content;
