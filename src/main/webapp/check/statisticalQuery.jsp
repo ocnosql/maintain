@@ -6,7 +6,7 @@
 <head>
   <script>
     Ext.onReady(function(){
-      var pageSize = 3000;
+      var pageSize = 100;
       var dynamicGrid = new Ext.grid.DynamicGrid({
         title: '数据展示列表',
         //renderTo: 'dynamic-grid',

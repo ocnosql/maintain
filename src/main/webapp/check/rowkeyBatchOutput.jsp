@@ -267,7 +267,7 @@
                       }else{
                         var dst_path = row[0].json.C4;
                         //window.location.href = appPath + "/RowkeyBatchOutputQueryAction_download.action?dst_path="+dst_path;
-                        window.location.href = appPath + "/batchDownload?dst_path="+dst_path;
+                        window.location.href = appPath + "/batchDownload.action?dst_path="+dst_path;
                       }
                     }
                   }]

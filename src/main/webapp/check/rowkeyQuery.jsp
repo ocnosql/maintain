@@ -70,7 +70,7 @@ var searchPanel = new Ext.FormPanel(
 				cls: 'x-icon-btn',
 				handler: function(){
 					if(gid!=null){
-						window.location.href = appPath + "/rowkeyDownload?gid="+gid;
+						window.location.href = appPath + "/rowkeyDownload.action?gid="+gid;
 					}else{
 						Ext.MessageBox.alert('提示', "请先查询，再导出!");
 					}
@@ -81,7 +81,7 @@ var searchPanel = new Ext.FormPanel(
 				cls: 'x-icon-btn',
 				handler: function(){
 					if(gid!=null){
-						window.location.href = appPath + "/rowkeyDownload_excel?gid="+gid;
+						window.location.href = appPath + "/rowkeyDownload_excel.action?gid="+gid;
 					}else{
 						Ext.MessageBox.alert('提示', "请先查询，再导出!");
 					}

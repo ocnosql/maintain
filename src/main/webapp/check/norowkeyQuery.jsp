@@ -10,7 +10,7 @@
 <head>
 	<script>
 		Ext.onReady(function(){
-			var pageSize = 200;
+			var pageSize = 100;
 			var gid = null;
 
 			/* Ext.Loader.setConfig({enabled: true});
@@ -135,7 +135,7 @@
 			}
 
 			function export1(exportType){
-				window.location.href= appPath + "/dataExport?taskId=${taskId}&exportType="+exportType;
+				window.location.href= appPath + "/dataExport.action?taskId=${taskId}&exportType="+exportType;
 			}
 
 		});
