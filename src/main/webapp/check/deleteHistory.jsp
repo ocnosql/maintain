@@ -5,7 +5,7 @@
 <head>
 <script>
 	Ext.onReady(function(){
-		var pageSize = 100;
+		var pageSize = 15;
 		Ext.Ajax.timeout = 180000;
 
 		var tablespace = new Ext.data.JsonStore({
