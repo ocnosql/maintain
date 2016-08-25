@@ -71,7 +71,7 @@
         //renderTo: 'dynamic-grid',
         storeUrl: appPath + "/RowkeyBatchDeatilQueryAction_query.action",
         width : '100%',
-        height: 500,
+        height: 633,
         rowNumberer: false,
         checkboxSelModel: false,
         sm: new Ext.grid.CheckboxSelectionModel(),
