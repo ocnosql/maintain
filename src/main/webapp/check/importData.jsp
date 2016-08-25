@@ -46,7 +46,7 @@
                 Ext.Msg.alert('提示', '导入任务已提交!');
             }
 
-            var pageSize = 15;
+            var pageSize = 100;
 
             var tablespace = new Ext.data.JsonStore({
                 fields: ['TABLE_SCHEM'],

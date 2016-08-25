@@ -10,7 +10,7 @@
     <script type="text/javascript" src="<%=appPath%>/js/DateTime/DateTimeField.js"></script>
     <script>
         Ext.onReady(function(){
-            var pageSize = 15;
+            var pageSize = 100;
             var dynamicGrid = new Ext.grid.DynamicGrid({
                 id:'test',
                 title: '数据展示列表',

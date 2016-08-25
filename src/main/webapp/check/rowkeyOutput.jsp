@@ -7,7 +7,7 @@
   <script>
 
     Ext.onReady(function(){
-      var pageSize = 15;
+      var pageSize = 100;
       var gid = null;
 
       /* Ext.Loader.setConfig({enabled: true});

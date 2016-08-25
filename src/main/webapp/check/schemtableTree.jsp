@@ -21,7 +21,7 @@ function GetRequest() {
 
 Ext.onReady(function(){
 
-    var pageSize = 15;
+    var pageSize = 100;
     var gid = null;
     var Request = new Object();
     Request = GetRequest();

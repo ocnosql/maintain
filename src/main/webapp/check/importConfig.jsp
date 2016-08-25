@@ -5,7 +5,7 @@
 <head>
     <script>
         Ext.onReady(function () {
-            var pageSize = 15;
+            var pageSize = 100;
 
             var tablespace = new Ext.data.JsonStore({
                 fields: ['TABLE_SCHEM'],

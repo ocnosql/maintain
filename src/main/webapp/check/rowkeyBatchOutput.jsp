@@ -35,7 +35,7 @@
   <script>
 
     Ext.onReady(function(){
-      var pageSize = 15;
+      var pageSize = 100;
       var gid = null;
 
       var tablespace = new Ext.data.JsonStore({
