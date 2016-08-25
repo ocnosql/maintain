@@ -1,7 +1,13 @@
 <serviceGroup>
+<!--
 <service name="AxisService" targetNamespace="http://webservice.ailk.com/">
+-->
+<service name="AxisService" targetNamespace="UpdateAppAcctSoap">
     <description>AxisService</description>
+    <!--
     <schema schemaNamespace="http://webservice.ailk.com/" />
+    -->
+    <schema schemaNamespace="UpdateAppAcctSoap" />
     <parameter name="ServiceClass" locked="false">com.ailk.webservice.WsServer4A</parameter>
     <!--获取菜品分类信息-->
     <operation name="UpdateAppAcctSoap">
