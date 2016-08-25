@@ -47,23 +47,49 @@ var searchPanel = new Ext.FormPanel(
 				text:'查询',
 				cls: 'x-icon-btn',
 				handler: function() {
-					if(Ext.getCmp('sql').getValue()==null||Ext.getCmp('sql').getValue()==''){
+
+					var sqlValue = Ext.getCmp('sql').getValue();
+					if(sqlValue==null||sqlValue==''){
 						Ext.MessageBox.alert('提示', "请输入查询语句!");
 						return ;
 					}
-                   gid = null;
-                   dynamicGrid.store.baseParams.gid = null;
-				   var a = searchPanel.getForm().getValues();
-	               var params = dynamicGrid.store.baseParams; 
-	               Ext.apply(params, a);
-	               dynamicGrid.store.baseParams = params; 
-	               dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
-                       callback: function(record, options, success){
-                           if(success){
-                               gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
-                               dynamicGrid.store.baseParams.gid = gid;
-                           }
-                       }});
+
+					if(sqlValue.indexOf("id") == -1){
+						Ext.Msg.confirm('提示','语句为非主键查询,确定要继续吗？',
+								function(btn){
+									if(btn=='yes'){
+										gid = null;
+										dynamicGrid.store.baseParams.gid = null;
+										var a = searchPanel.getForm().getValues();
+										var params = dynamicGrid.store.baseParams;
+										Ext.apply(params, a);
+										dynamicGrid.store.baseParams = params;
+										dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
+											callback: function(record, options, success){
+												if(success){
+													gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
+													dynamicGrid.store.baseParams.gid = gid;
+												}
+											}});
+									}else{
+										return;
+									}
+								},this);
+					}else{
+						gid = null;
+						dynamicGrid.store.baseParams.gid = null;
+						var a = searchPanel.getForm().getValues();
+						var params = dynamicGrid.store.baseParams;
+						Ext.apply(params, a);
+						dynamicGrid.store.baseParams = params;
+						dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
+							callback: function(record, options, success){
+								if(success){
+									gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
+									dynamicGrid.store.baseParams.gid = gid;
+								}
+							}});
+					}
 				}
 			}, {
 				text:'导出文本',
