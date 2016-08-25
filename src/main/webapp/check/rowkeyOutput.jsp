@@ -169,7 +169,7 @@
         //renderTo: 'dynamic-grid',
         storeUrl: appPath + "/RowkeyOutputQueryAction_query.action",
         width : '100%',
-        height: 500,
+        height: 414,
         rowNumberer: true,
         //checkboxSelModel: true,
         sm: new Ext.grid.CheckboxSelectionModel(),
