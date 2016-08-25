@@ -167,3 +167,5 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'admin', 'admin', '1');
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`maintain`@`%` SQL SECURITY DEFINER VIEW `user_view` AS select `user`.`id` AS `id`,`user`.`name` AS `name`,`user`.`passwd` AS `passwd`,`user`.`is_enable` AS `is_enable`,`user`.`name` AS `user_name`,'0' AS `orgid`,'0' AS `email`,'0' AS `mobile`,'2000-01-01 00:00:00' AS `effect_time`,'2099-12-31 00:00:00' AS `expire_time`,'0' AS `acct_desc` from `user`;
