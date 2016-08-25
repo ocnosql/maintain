@@ -47,12 +47,12 @@ public class RowkeyBatchSubThread extends Thread{
         //生成rowkey将sql_str中的rowkey替换掉
         RowKeyGenerator generator = new GeneratorMD5();
         if(generator!=null){
-            String rowkey = (String) generator.generatePrefix(this.phone_num);
+            String rowkey = (String) generator.generate(this.phone_num);
             this.sql_str = this.sql_str.replace("${rowkey}",rowkey);
         }
 
         try {
-            Log.info("RowkeyBatchSubThread  &&&&&&" + this.getName()+"  SQL="+ this.sql_str );
+            Log.info("RowkeyBatchSubThread " + this.getName()+"  SQL="+ this.sql_str );
 
             //准备就绪  查询后写文件
             Configuration conf = Connection.getInstance().getConf();

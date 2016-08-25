@@ -19,6 +19,7 @@ import java.util.*;
  */
 public class HDFSUtil {
 
+
     //static String defaultSeparator = "\t";  //修改为取自配置文件
     private final static String RUNTIME_PROPERTIES = "runtime.properties";
     public static final Log LOG = LogFactory.getLog(HDFSUtil.class);

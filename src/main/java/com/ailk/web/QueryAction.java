@@ -181,7 +181,7 @@ public class QueryAction extends BaseAction{
         RowKeyGenerator generator = new GeneratorMD5();
         try{
 			if(generator!=null){
-	        	rowkey = (String) generator.generatePrefix(rowkey);
+	        	rowkey = (String) generator.generate(rowkey);
 	        }
 			this.setAjaxStr("{\"success\": true, \"rowkey\": \""+ rowkey +"\"}");
         }catch(Exception e){
