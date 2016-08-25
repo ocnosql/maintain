@@ -42,7 +42,12 @@ public class HDFSUtil {
             while(rs.next()) {
                 sb.setLength(0);
                 for(int i = 1; i <= count; i++) {
-                    sb.append(rs.getObject(i)).append(temp.get("hdfs.defaultSeparator"));
+                    //广西要求
+                    if(rs.getObject(i)==null){
+                        sb.append("").append(temp.get("hdfs.defaultSeparator"));
+                    }else{
+                        sb.append(rs.getObject(i)).append(temp.get("hdfs.defaultSeparator"));
+                    }
                 }
                 sb.deleteCharAt(sb.length() -1);
                 sb.append("\n");
