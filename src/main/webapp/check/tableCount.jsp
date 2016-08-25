@@ -6,7 +6,7 @@
 <head>
 <script>
 Ext.onReady(function(){
-var pageSize = 3000;
+var pageSize = 15;
 
 /* Ext.Loader.setConfig({enabled: true});
 Ext.Loader.setPath('Ext.ux', '../../examples/ux'); */
