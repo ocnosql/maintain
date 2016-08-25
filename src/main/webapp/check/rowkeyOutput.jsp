@@ -144,7 +144,7 @@
                       Ext.MessageBox.alert('提示', "请先查询，再导出!");
                       return;
                     }else{
-                      window.location.href = appPath + "/rowkeyDownload?gid="+gid;
+                      window.location.href = appPath + "/rowkeyDownload.action?gid="+gid;
                     }
                     //dynamicGrid.getSelectionModel().selectAll();
                   }
@@ -156,7 +156,7 @@
                       Ext.MessageBox.alert('提示', "请先查询，再导出!");
                       return;
                     }else{
-                      window.location.href = appPath + "/rowkeyDownload_excel?gid="+gid;
+                      window.location.href = appPath + "/rowkeyDownload_excel.action?gid="+gid;
                     }
                     //Utils.copySelectedRows(dynamicGrid);
                   }
