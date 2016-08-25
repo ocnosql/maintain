@@ -96,7 +96,7 @@ var dynamicGrid = new Ext.grid.DynamicGrid({
     //renderTo: 'dynamic-grid',  
     storeUrl: appPath + "/RowkeyQueryAction_query.action",
     width : '100%',  
-    height: 500,  
+    height: 466,
     rowNumberer: true,  
     //checkboxSelModel: true,  
     sm: new Ext.grid.CheckboxSelectionModel(),
