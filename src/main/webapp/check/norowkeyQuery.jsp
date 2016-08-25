@@ -92,7 +92,7 @@
 				//renderTo: 'dynamic-grid',
 				storeUrl: appPath + "/NoRowkeyQueryAction_query.action?taskId=${taskId}",
 				width : '100%',
-				height: 500,
+				height: 450,
 				rowNumberer: true,
 				//checkboxSelModel: true,
 				sm: new Ext.grid.CheckboxSelectionModel(),
