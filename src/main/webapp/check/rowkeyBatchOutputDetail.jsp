@@ -30,7 +30,7 @@
       var columns_str  = Request['columns_str'];
       var total_count = Request['total_count'];
 
-      var pageSize = 20;
+      var pageSize = 15;
       var gid = null;
 
       /**
