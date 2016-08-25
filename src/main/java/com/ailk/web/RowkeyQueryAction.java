@@ -41,14 +41,12 @@ public class RowkeyQueryAction extends BaseAction {
                 if(dto.getExtInfo() != null){
                     result.setExtInfo(dto.getExtInfo());
                 }
-                //String a = gs.toJson(result);
-                //LOG.info("aaaaa==== " +  a);
                 this.setAjaxStr(gs.toJson(result));
             }else{
                 this.setAjaxStr(gs.toJson(ResultBuild.buildFailed(dto.getMessage())));
             }
             long endTime2 = System.currentTimeMillis();
-            //LOG.info("convert records to json token: " + (endTime2 - endTime) + "ms");
+            LOG.info("convert records to json token: " + (endTime2 - endTime) + "ms");
         } catch(Throwable ex){
             LOG.error("查询出现异常", ex);
             this.setAjaxStr(gs.toJson(ResultBuild.buildFailed(ex)));
