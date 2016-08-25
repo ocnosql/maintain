@@ -22,8 +22,11 @@ public class GeneratorMD5 implements RowKeyGenerator {
 
     }
 
-    @Override
-    public String generate(String var1) {
+    public Object generate(String oriRowKey) {
+        return this.generatePrefix(oriRowKey) + oriRowKey;
+    }
+
+    public String generateOldPrefix(String var1) {
         String var2 = null;
 
         try {
