@@ -34,7 +34,7 @@
     <script>
 
         Ext.onReady(function(){
-            var pageSize = 100;
+            var pageSize = 15;//100
             var gid = null;
 
             var dynamicGrid = new Ext.grid.DynamicGrid({
