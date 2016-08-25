@@ -11,6 +11,7 @@ import com.ailk.service.IQueryService;
 import com.ailk.service.impl.QueryByRowkeyOutputService;
 import com.ailk.util.Cache;
 import com.ailk.util.DateUtil;
+import com.ailk.util.HDFSUtil;
 import com.google.gson.Gson;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
@@ -100,6 +101,7 @@ public class RowkeyOutputQueryAction extends BaseAction {
     }
 
     public String rowkeyDownload_excel() throws IOException, WriteException {
+        HDFSUtil temp = new HDFSUtil();
         ValueSet vs = new ValueSet();
         bindParams(vs, ServletActionContext.getRequest());
         String gid = vs.getString("gid");
@@ -132,7 +134,7 @@ public class RowkeyOutputQueryAction extends BaseAction {
                 Label labelContent = null;
                 while ((line = reader.readLine()) != null) {
                     //切割成数组
-                    String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, "\t");
+                    String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, temp.get("hdfs.defaultSeparator"));
                     for (int i = 0; i < values.length; i++) {
                         labelContent = new Label(i, index, values[i]);
                         labelContent.setCellFormat(WritableWorkbook.NORMAL_STYLE);
