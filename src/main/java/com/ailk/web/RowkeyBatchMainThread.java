@@ -89,7 +89,7 @@ public class RowkeyBatchMainThread extends Thread{
         }
 
         //创建线程池
-        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(20);
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
         //根据taskId查找所有需要进行的任务  分页查询  每次5000
         StringBuffer sqlCountBuffer = new StringBuffer("select count(*) C from subtask_status where pid='").append(taskId).append("'");
         List<Map> result =  dao.query(sqlCountBuffer.toString());
