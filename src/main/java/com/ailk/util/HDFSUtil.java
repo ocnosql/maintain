@@ -19,11 +19,12 @@ import java.util.*;
  */
 public class HDFSUtil {
 
-    static String defaultSeparator = "\t";
-
+    //static String defaultSeparator = "\t";  //修改为取自配置文件
+    private final static String RUNTIME_PROPERTIES = "runtime.properties";
     public static final Log LOG = LogFactory.getLog(HDFSUtil.class);
 
     public static DataInfo write(Configuration conf, ResultSet rs, String path) throws IOException {
+        HDFSUtil temp = new HDFSUtil();
         String uuid = UUID.randomUUID().toString();
         path = path + "/" + uuid;
         FileSystem fs = FileSystem.get(conf);
@@ -40,7 +41,7 @@ public class HDFSUtil {
             while(rs.next()) {
                 sb.setLength(0);
                 for(int i = 1; i <= count; i++) {
-                    sb.append(rs.getObject(i)).append(defaultSeparator);
+                    sb.append(rs.getObject(i)).append(temp.get("hdfs.defaultSeparator"));
                 }
                 sb.deleteCharAt(sb.length() -1);
                 sb.append("\n");
@@ -73,6 +74,7 @@ public class HDFSUtil {
 
 
     public static List<Map> read(Configuration conf, String path, String[] columns, int start, int offset) throws IOException {
+        HDFSUtil temp = new HDFSUtil();
         FileSystem fs = FileSystem.get(conf);
         FSDataInputStream in = fs.open(new Path(path));
         InputStreamReader inputStreamReader = new InputStreamReader(in);
@@ -89,7 +91,7 @@ public class HDFSUtil {
                 break;
             }
             Map record = new LinkedHashMap<String, String>(columns.length);
-            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, defaultSeparator);
+            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, temp.get("hdfs.defaultSeparator"));
             for(int i = 0; i < columns.length; i++) {
                 record.put(columns[i], values[i]);
             }
@@ -100,6 +102,7 @@ public class HDFSUtil {
     }
 
     public static  List<Map>  readFiles(Configuration conf, String path, String[] columns, int start, int offset) throws IOException {
+        HDFSUtil temp = new HDFSUtil();
         //long startTime2 = System.currentTimeMillis();
         FileSystem fs = FileSystem.get(conf);
         FileStatus[] files = fs.listStatus(new Path(path));
@@ -129,7 +132,7 @@ public class HDFSUtil {
                         break;
                     }else{
                         Map record = new LinkedHashMap<String, String>(columns.length);
-                        String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, defaultSeparator);
+                        String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, temp.get("hdfs.defaultSeparator"));
                         for(int j = 0; j < columns.length; j++) {
                             record.put(columns[j], values[j]);
                         }
@@ -145,6 +148,14 @@ public class HDFSUtil {
         //long endTime2 = System.currentTimeMillis();
         //LOG.info("all file complete! token: " + (endTime2 - startTime2) + "ms");
         return list;
+    }
+
+    public String get(String propertyName){
+        return PropertiesUtil.getProperty(RUNTIME_PROPERTIES, propertyName);
+    }
+
+    public int getInt(String propertyName){
+        return Integer.parseInt(PropertiesUtil.getProperty(RUNTIME_PROPERTIES, propertyName));
     }
 
 
