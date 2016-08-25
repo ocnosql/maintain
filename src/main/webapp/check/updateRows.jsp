@@ -118,7 +118,7 @@ var grid = new Ext.grid.EditorGridPanel({
                 };  */ 
             var initValue = {  
                     fieldName:'',  
-                    fieldValue:'',   
+                    fieldValue:''
                 };       
             var order = new Order(initValue);  
             grid.stopEditing();  
