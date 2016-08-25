@@ -38,8 +38,13 @@ public class UserService {
 
             dao.executeUpdate(sqlInsertStr,paramsInsert);
 
+            //查询出新增用户的Id，并返回
+            String sqlIdStr = "select id from user where name='"+user.getName()+"'";
+            List<Map> resultId =  dao.query(sqlIdStr);
+            String idStr = String.valueOf(resultId.get(0).get("id"));
+
             resultDTO.setSuccess(true);
-            resultDTO.setMessage("成功");
+            resultDTO.setMessage(idStr);
             return resultDTO;
         } catch (Throwable e) {
             resultDTO.setSuccess(false);
@@ -81,8 +86,13 @@ public class UserService {
             paramsUpdate[0] = user.getName();
             dao.executeUpdate(sqlUpdateStr,paramsUpdate);
 
+            //查询出修改用户的Id，并返回
+            String sqlIdStr = "select id from user where name='"+user.getName()+"'";
+            List<Map> resultId =  dao.query(sqlIdStr);
+            String idStr = String.valueOf(resultId.get(0).get("id"));
+
             resultDTO.setSuccess(true);
-            resultDTO.setMessage("成功");
+            resultDTO.setMessage(idStr);
             return resultDTO;
 
         }catch (Throwable e){
@@ -103,8 +113,13 @@ public class UserService {
             paramsUpdate[0] = user.getName();
             dao.executeUpdate(sqlUpdateStr,paramsUpdate);
 
+            //查询出修改用户的Id，并返回
+            String sqlIdStr = "select id from user where name='"+user.getName()+"'";
+            List<Map> resultId =  dao.query(sqlIdStr);
+            String idStr = String.valueOf(resultId.get(0).get("id"));
+
             resultDTO.setSuccess(true);
-            resultDTO.setMessage("成功");
+            resultDTO.setMessage(idStr);
             return resultDTO;
 
         }catch (Throwable e){
