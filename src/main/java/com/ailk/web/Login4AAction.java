@@ -58,16 +58,16 @@ public class Login4AAction extends BaseAction {
 		LOG.info("--------------输入---------------------");
 		LOG.info(XStreamHandle.toXml(reqUSERREQ, false));
 		LOG.info("--------------输出---------------------");
-		LOG.info(XStreamHandle.toXml(wsClient4A.getCheckAiuapTokenSoapRes(reqUSERREQ), false));
-
 		CheckAiuapTokenSoap_ResUSERRSP resUSERRSP = wsClient4A.getCheckAiuapTokenSoapRes(reqUSERREQ);
+		LOG.info(XStreamHandle.toXml(resUSERRSP,false));
+
 		//测试时放开  正式使用时关闭
 		/**
 		CheckAiuapTokenSoap_ResBODY resBODY = resUSERRSP.getBODY();
 		resBODY.setRSP("0");
 		resUSERRSP.setBODY(resBODY);
 		 **/
-
+		LOG.info("RSP:"+resUSERRSP.getBODY().getRSP().toString());
 		if(resUSERRSP!=null&&resUSERRSP.getBODY()!=null&&resUSERRSP.getBODY().getRSP()!=null&&"0".equals(resUSERRSP.getBODY().getRSP())){
 			//鉴权成功
 			ServletActionContext.getRequest().getSession().setAttribute("user", true);
@@ -75,6 +75,7 @@ public class Login4AAction extends BaseAction {
 			map.put("success", true);
 			Gson gs = new Gson();
 			this.setAjaxStr(gs.toJson(map));
+			LOG.info("鉴权成功");
 			return AJAXRTN;
 		}else{
 			//鉴权失败
@@ -82,6 +83,7 @@ public class Login4AAction extends BaseAction {
 			map.put("success", false);
 			Gson gs = new Gson();
 			this.setAjaxStr(gs.toJson(map));
+			LOG.info("鉴权失败");
 			return AJAXRTN;
 		}
 	}
