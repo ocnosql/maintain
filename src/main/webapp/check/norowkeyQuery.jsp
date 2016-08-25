@@ -135,7 +135,7 @@
 			}
 
 			function export1(exportType){
-				window.location.href= appPath + "/dataExport?taskId=${taskId}&exportType="+exportType;
+				window.location.href= appPath + "/dataExport.action?taskId=${taskId}&exportType="+exportType;
 			}
 
 		});
