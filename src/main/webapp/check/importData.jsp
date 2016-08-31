@@ -174,7 +174,7 @@
                                 name: 'inputPath',
                                 id: 'inputPath',
                                 value: '',
-                                anchor: '90%',
+                                anchor: '90%'
                             }]
                         },
                         {

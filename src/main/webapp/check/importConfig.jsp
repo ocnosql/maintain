@@ -61,7 +61,7 @@
                                 Ext.getCmp('rowkey').setValue(obj.records[0].rowkey);
                                 Ext.getCmp('cname').setValue(obj.records[0].cname);
                                 Ext.getCmp('separator').setValue(obj.records[0].separatorx);
-                                Ext.getCmp('loadType').setValue(obj.records[0].loadType);
+                                //Ext.getCmp('loadType').setValue(obj.records[0].loadType);
                                 //Ext.getCmp('inputPath').setValue(obj.records[0].inputPath);
                                 //Ext.getCmp('outputPath').setValue(obj.records[0].outputPath);
                                 Ext.getCmp('generator').setValue(obj.records[0].generator);
@@ -388,7 +388,6 @@
                 Ext.getCmp('rowkey').setDisabled(result);
                 Ext.getCmp('cname').setDisabled(result);
                 Ext.getCmp('separator').setDisabled(result);
-                Ext.getCmp('callback').setDisabled(result);
                 Ext.getCmp('generator').setDisabled(result);
                 Ext.getCmp('algocolumn').setDisabled(result);
                 // Ext.getCmp('inputPath').setDisabled(result);
