@@ -13,7 +13,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>用户登录</title>
+<title>用户登录 </title>
 <script>
 	//开始
 	Ext.onReady(function fn() {
