@@ -63,6 +63,7 @@ var treePanel = new Ext.tree.TreePanel({
     root: new Ext.tree.AsyncTreeNode({   
         id:'-1',text:'云详单'   
     })
+
 	
 });
 
