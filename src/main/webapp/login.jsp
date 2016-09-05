@@ -3,6 +3,7 @@
 <%@ include file="/common/common.jsp"%>
 <% 
 	//应用上下文地址
+
 	Object user = request.getSession().getAttribute("user");
 	if(user != null){
 		response.sendRedirect(appPath + "/index.jsp");
