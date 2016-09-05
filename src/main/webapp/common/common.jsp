@@ -8,7 +8,7 @@
 <script type="text/javascript" charset="utf-8" >
 	var appPath="<%=appPath%>";
 </script>
-
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <link href="<%=appPath%>/css/lib/ext/ext-all.css" rel="stylesheet" type="text/css">
