@@ -54,7 +54,7 @@ var searchPanel = new Ext.FormPanel(
 						return ;
 					}
 
-					if(sqlValue.indexOf("id") == -1||sqlValue.indexOf("ID") == -1){
+					if(sqlValue.indexOf("id") == -1&&sqlValue.indexOf("ID") == -1){
 						Ext.Msg.confirm('提示','语句为非主键查询,确定要继续吗？',
 								function(btn){
 									if(btn=='yes'){
