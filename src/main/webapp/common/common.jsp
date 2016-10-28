@@ -8,7 +8,7 @@
 <script type="text/javascript" charset="utf-8" >
 	var appPath="<%=appPath%>";
 </script>
-
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <link href="<%=appPath%>/css/lib/ext/ext-all.css" rel="stylesheet" type="text/css">
@@ -49,12 +49,20 @@ Ext.Ajax.on('requestcomplete', function(conn, response, options ) {
 			options.success = function(){};
 			options.failure = function(){};
 			//alert('会话失效，请重新登录！');
-			if(window.parent != null){
+			/**
+			 if(window.parent != null){
 				window.top.location.href = appPath + '/login.jsp';
 			}else{
 				window.location.href = appPath + '/login.jsp';
 			}
-			return;
+			 **/
+			var errorMsg = "会话失效，请重新登录！";
+			var isSessionTimeout = "1";
+			if(window.parent != null){
+				window.top.location.href = appPath + '/login4A.jsp?isSessionTimeout='+isSessionTimeout;
+			}else{
+				window.location.href = appPath + '/login4A.jsp?isSessionTimeout='+isSessionTimeout;
+			}
 		}
 
 	}catch(e){

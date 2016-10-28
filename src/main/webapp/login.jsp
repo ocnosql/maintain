@@ -3,6 +3,7 @@
 <%@ include file="/common/common.jsp"%>
 <% 
 	//应用上下文地址
+
 	Object user = request.getSession().getAttribute("user");
 	if(user != null){
 		response.sendRedirect(appPath + "/index.jsp");
@@ -29,12 +30,12 @@
 					//draggable: true,
 					//以下两个为Submit的主要方法
 					onSubmit : function(){
-						alert();
+						//alert();
 					},
 					submit : function() {
 
 						this.getEl().dom.action = "#";
-						this.getEl().dom.submit()
+						this.getEl().dom.submit();
 						//Ext.MessageBox.alert("Form submit","Submit SUCCESS!!!");
 					},
 					items : [ //设置FormPanel的子对象
@@ -104,6 +105,6 @@
 </head>
 <body>
 	<!-- 设置对应的Div -->
-	<div id="loginForm" style="margin: 60px auto; width: 500px;"></div>
+	<div id="loginForm" style="margin: 150px auto 60px 450px; width: 350px;"></div>
 </body>
 </html>

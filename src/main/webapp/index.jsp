@@ -3,7 +3,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<%@ include file="common/head.jsp"%>
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<%@ include file="common/head.jsp"%>
 <script><!--
 var mainPanel;
 Ext.onReady(function(){
@@ -62,6 +63,7 @@ var treePanel = new Ext.tree.TreePanel({
     root: new Ext.tree.AsyncTreeNode({   
         id:'-1',text:'云详单'   
     })
+
 	
 });
 
@@ -88,7 +90,7 @@ var viewport = new Ext.Viewport({
             frame:true,
             border:true,
             collapsible:true,
-			autoScroll:false,
+			autoScroll:true,
             width: 200,  
             title: '菜单',
             items: [treePanel],

@@ -17,6 +17,7 @@ public class SystemListener implements ServletContextListener{//监听web生命�
 	private final static Log log = LogFactory.getLog(SystemListener.class);
 	private final static String RUNTIME_PROPERTIES = "runtime.properties";
 
+
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		

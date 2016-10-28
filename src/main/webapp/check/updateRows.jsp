@@ -6,7 +6,7 @@
 <head>
 <script>
 Ext.onReady(function(){
-var pageSize = 3000;
+var pageSize = 100;
 
 
 
@@ -118,7 +118,7 @@ var grid = new Ext.grid.EditorGridPanel({
                 };  */ 
             var initValue = {  
                     fieldName:'',  
-                    fieldValue:'',   
+                    fieldValue:''
                 };       
             var order = new Order(initValue);  
             grid.stopEditing();  

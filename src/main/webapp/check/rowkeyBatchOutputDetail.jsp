@@ -30,7 +30,7 @@
       var columns_str  = Request['columns_str'];
       var total_count = Request['total_count'];
 
-      var pageSize = 20;
+      var pageSize = 100;
       var gid = null;
 
       /**
@@ -71,7 +71,7 @@
         //renderTo: 'dynamic-grid',
         storeUrl: appPath + "/RowkeyBatchDeatilQueryAction_query.action",
         width : '100%',
-        height: 500,
+        height: 633,
         rowNumberer: false,
         checkboxSelModel: false,
         sm: new Ext.grid.CheckboxSelectionModel(),

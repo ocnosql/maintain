@@ -10,6 +10,8 @@ import com.ailk.oci.ocnosql.common.config.Connection;
 import com.ailk.service.IQueryService;
 import com.ailk.util.Cache;
 import com.ailk.util.HDFSUtil;
+import com.sun.org.apache.commons.logging.Log;
+import com.sun.org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 
 import java.sql.ResultSet;
@@ -22,6 +24,8 @@ import java.util.Map;
  */
 public class QueryByRowkeyService implements IQueryService {
 
+    public static final Log LOG = LogFactory.getLog(QueryByRowkeyService.class);
+
     @Override
     public ResultDTO loadData(ValueSet vs) {
         Configuration conf = Connection.getInstance().getConf();
@@ -32,6 +36,7 @@ public class QueryByRowkeyService implements IQueryService {
         try {
             if(info == null) {
                 HbaseJdbcHelper help = new PhoenixJdbcHelper();
+                LOG.info(vs.getString("sql"));
                 ResultSet rs = help.executeQueryRaw(vs.getString("sql"));
                 info = HDFSUtil.write(conf, rs, "/rowkey_query");
                 Cache.put(info.getUuid(), info);

@@ -10,14 +10,14 @@
     <script type="text/javascript" src="<%=appPath%>/js/DateTime/DateTimeField.js"></script>
     <script>
         Ext.onReady(function(){
-            var pageSize = 50;
+            var pageSize = 100;
             var dynamicGrid = new Ext.grid.DynamicGrid({
                 id:'test',
                 title: '数据展示列表',
                 //renderTo: 'dynamic-grid',
                 storeUrl:"<%=appPath%>/NoRowkeyQueryAction_queryTask.action",
                 width : '100%',
-                height: 500,
+                height: 450,
                 rowNumberer: true,
                 checkboxSelModel: true,
                 sm: new Ext.grid.CheckboxSelectionModel(),
@@ -52,10 +52,6 @@
                                 autoHeight: true,
                                 defaults:{layout: 'form',border:false,columnWidth:.5},
                                 items:[
-
-//                                    {items: [{xtype:'textfield',enableKeyEvents:true,fieldLabel: '开始日期',name: 'startDate',value:'20121230',anchor:'90%'
-//
-//                                    }]},
                                     {items:[{xtype:'datetimefield',fieldLabel: '开始日期',name: 'startDate',value:'',anchor:'50%'}]},
                                     {items:[{xtype:'datetimefield',fieldLabel: '结束日期',name: 'endDate',value:'',anchor:'50%'}]},
                                     {items: [{
@@ -77,13 +73,13 @@
                                         triggerAction: 'all',
                                         selectOnFocus: true,
                                         //allowBlank: false,
-                                        listeners: {
+                                            listeners: {
                                             afterRender: function(combo) {
                                                 /* 		var firstValue = combo.getStore().reader.arrayData[0][1];
                                                  combo.setValue(firstValue);//同时下拉框会将与name为firstValue值对应的 text显示   */
                                             }
                                         }
-                                    }]},
+                                    }]}
 
                                 ]//items
                             }

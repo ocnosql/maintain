@@ -7,13 +7,11 @@ import com.ailk.model.ValueSet;
 import com.ailk.model.ext.JsonResult;
 import com.ailk.model.ext.ResultBuild;
 import com.ailk.oci.ocnosql.common.config.Connection;
-import com.ailk.oci.ocnosql.common.rowkeygenerator.MD5RowKeyGenerator;
-import com.ailk.oci.ocnosql.common.rowkeygenerator.RowKeyGenerator;
 import com.ailk.service.IQueryService;
 import com.ailk.service.impl.QueryByRowkeyOutputService;
-import com.ailk.service.impl.QueryByRowkeyService;
 import com.ailk.util.Cache;
 import com.ailk.util.DateUtil;
+import com.ailk.util.HDFSUtil;
 import com.google.gson.Gson;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
@@ -22,11 +20,9 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.struts2.ServletActionContext;
@@ -105,6 +101,7 @@ public class RowkeyOutputQueryAction extends BaseAction {
     }
 
     public String rowkeyDownload_excel() throws IOException, WriteException {
+        HDFSUtil temp = new HDFSUtil();
         ValueSet vs = new ValueSet();
         bindParams(vs, ServletActionContext.getRequest());
         String gid = vs.getString("gid");
@@ -137,7 +134,7 @@ public class RowkeyOutputQueryAction extends BaseAction {
                 Label labelContent = null;
                 while ((line = reader.readLine()) != null) {
                     //切割成数组
-                    String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, "\t");
+                    String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(line, temp.get("hdfs.defaultSeparator"));
                     for (int i = 0; i < values.length; i++) {
                         labelContent = new Label(i, index, values[i]);
                         labelContent.setCellFormat(WritableWorkbook.NORMAL_STYLE);

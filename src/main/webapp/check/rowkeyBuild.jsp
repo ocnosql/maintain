@@ -83,8 +83,8 @@ Ext.onReady(function(){
                         defaults:{layout: 'form',border:false,columnWidth:.5},
                         items:[
                             {items: [{xtype:'textfield',fieldLabel: '查询前缀',id: 'rowkey', name:'rowkey',anchor:'90%', value:'',
-                                enableKeyEvents: false,disabled: true,
-                                listeners : {
+                                enableKeyEvents: false,disabled: false,readOnly:true,
+                                        listeners : {
                                     keypress : function(obj, e){
 
                                     }

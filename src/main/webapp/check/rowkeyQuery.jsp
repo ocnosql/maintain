@@ -47,26 +47,56 @@ var searchPanel = new Ext.FormPanel(
 				text:'查询',
 				cls: 'x-icon-btn',
 				handler: function() {
-                   gid = null;
-                   dynamicGrid.store.baseParams.gid = null;
-				   var a = searchPanel.getForm().getValues();
-	               var params = dynamicGrid.store.baseParams; 
-	               Ext.apply(params, a);
-	               dynamicGrid.store.baseParams = params; 
-	               dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
-                       callback: function(record, options, success){
-                           if(success){
-                               gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
-                               dynamicGrid.store.baseParams.gid = gid;
-                           }
-                       }});
+
+					var sqlValue = Ext.getCmp('sql').getValue();
+					if(sqlValue==null||sqlValue==''){
+						Ext.MessageBox.alert('提示', "请输入查询语句!");
+						return ;
+					}
+
+					if(sqlValue.indexOf("id") == -1&&sqlValue.indexOf("ID") == -1){
+						Ext.Msg.confirm('提示','语句为非主键查询,确定要继续吗？',
+								function(btn){
+									if(btn=='yes'){
+										gid = null;
+										dynamicGrid.store.baseParams.gid = null;
+										var a = searchPanel.getForm().getValues();
+										var params = dynamicGrid.store.baseParams;
+										Ext.apply(params, a);
+										dynamicGrid.store.baseParams = params;
+										dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
+											callback: function(record, options, success){
+												if(success){
+													gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
+													dynamicGrid.store.baseParams.gid = gid;
+												}
+											}});
+									}else{
+										return;
+									}
+								},this);
+					}else{
+						gid = null;
+						dynamicGrid.store.baseParams.gid = null;
+						var a = searchPanel.getForm().getValues();
+						var params = dynamicGrid.store.baseParams;
+						Ext.apply(params, a);
+						dynamicGrid.store.baseParams = params;
+						dynamicGrid.store.load({ params: { start: 0, limit: dynamicGrid.getBottomToolbar().pageSize},
+							callback: function(record, options, success){
+								if(success){
+									gid = dynamicGrid.store.reader.jsonData.extInfo.gid;
+									dynamicGrid.store.baseParams.gid = gid;
+								}
+							}});
+					}
 				}
 			}, {
 				text:'导出文本',
 				cls: 'x-icon-btn',
 				handler: function(){
 					if(gid!=null){
-						window.location.href = appPath + "/rowkeyDownload?gid="+gid;
+						window.location.href = appPath + "/rowkeyDownload.action?gid="+gid;
 					}else{
 						Ext.MessageBox.alert('提示', "请先查询，再导出!");
 					}
@@ -77,7 +107,7 @@ var searchPanel = new Ext.FormPanel(
 				cls: 'x-icon-btn',
 				handler: function(){
 					if(gid!=null){
-						window.location.href = appPath + "/rowkeyDownload_excel?gid="+gid;
+						window.location.href = appPath + "/rowkeyDownload_excel.action?gid="+gid;
 					}else{
 						Ext.MessageBox.alert('提示', "请先查询，再导出!");
 					}
@@ -92,7 +122,7 @@ var dynamicGrid = new Ext.grid.DynamicGrid({
     //renderTo: 'dynamic-grid',  
     storeUrl: appPath + "/RowkeyQueryAction_query.action",
     width : '100%',  
-    height: 500,  
+    height: 466,
     rowNumberer: true,  
     //checkboxSelModel: true,  
     sm: new Ext.grid.CheckboxSelectionModel(),

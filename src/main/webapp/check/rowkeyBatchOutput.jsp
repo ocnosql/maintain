@@ -267,7 +267,7 @@
                       }else{
                         var dst_path = row[0].json.C4;
                         //window.location.href = appPath + "/RowkeyBatchOutputQueryAction_download.action?dst_path="+dst_path;
-                        window.location.href = appPath + "/batchDownload?dst_path="+dst_path;
+                        window.location.href = appPath + "/batchDownload.action?dst_path="+dst_path;
                       }
                     }
                   }]
@@ -299,7 +299,7 @@
         //renderTo: 'dynamic-grid',
         storeUrl: appPath + "/RowkeyBatchOutputQueryAction_query.action",
         width : '100%',
-        height: 500,
+        height: 376,
         rowNumberer: true,
         checkboxSelModel: true,
         sm: new Ext.grid.CheckboxSelectionModel(),

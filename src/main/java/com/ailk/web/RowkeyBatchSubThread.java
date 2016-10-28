@@ -1,27 +1,20 @@
 package com.ailk.web;
 
-import com.ailk.core.exception.AppRuntimeException;
 import com.ailk.dao.BaseDao;
 import com.ailk.model.DataInfo;
 import com.ailk.oci.ocnosql.client.jdbc.HbaseJdbcHelper;
 import com.ailk.oci.ocnosql.client.jdbc.phoenix.PhoenixJdbcHelper;
 import com.ailk.oci.ocnosql.client.jdbc.pool.DbPool;
 import com.ailk.oci.ocnosql.common.config.Connection;
-import com.ailk.oci.ocnosql.common.rowkeygenerator.MD5RowKeyGenerator;
 import com.ailk.oci.ocnosql.common.rowkeygenerator.RowKeyGenerator;
+import com.ailk.util.GeneratorMD5;
 import com.ailk.util.HDFSUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.mortbay.log.Log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.security.spec.ECField;
 import java.sql.ResultSet;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by scj on 2016/7/20.
@@ -52,14 +45,14 @@ public class RowkeyBatchSubThread extends Thread{
 
         //具体业务部分  根据号码生成文件到指定的目录
         //生成rowkey将sql_str中的rowkey替换掉
-        RowKeyGenerator generator = new MD5RowKeyGenerator();
+        RowKeyGenerator generator = new GeneratorMD5();
         if(generator!=null){
             String rowkey = (String) generator.generate(this.phone_num);
             this.sql_str = this.sql_str.replace("${rowkey}",rowkey);
         }
 
         try {
-            Log.info("RowkeyBatchSubThread  &&&&&&" + this.getName()+"  SQL="+ this.sql_str );
+            Log.info("RowkeyBatchSubThread " + this.getName()+"  SQL="+ this.sql_str );
 
             //准备就绪  查询后写文件
             Configuration conf = Connection.getInstance().getConf();

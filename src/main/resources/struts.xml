@@ -80,6 +80,10 @@
 			<result name="ajax_rtn">/common/ajaxrtn.jsp</result>
 			<result name="success">/common/success.jsp</result>
 		</action>
+		<action name="login4A" class="com.ailk.web.Login4AAction" method="login4A">
+			<result name="ajax_rtn">/common/ajaxrtn.jsp</result>
+			<!--<result name="success">/common/success.jsp</result>-->
+		</action>
 	</package>
 	
 </struts>

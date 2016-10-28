@@ -10,7 +10,7 @@
 <head>
 	<script>
 		Ext.onReady(function(){
-			var pageSize = 200;
+			var pageSize = 100;
 			var gid = null;
 
 			/* Ext.Loader.setConfig({enabled: true});
@@ -92,7 +92,7 @@
 				//renderTo: 'dynamic-grid',
 				storeUrl: appPath + "/NoRowkeyQueryAction_query.action?taskId=${taskId}",
 				width : '100%',
-				height: 500,
+				height: 450,
 				rowNumberer: true,
 				//checkboxSelModel: true,
 				sm: new Ext.grid.CheckboxSelectionModel(),
@@ -135,7 +135,7 @@
 			}
 
 			function export1(exportType){
-				window.location.href= appPath + "/dataExport?taskId=${taskId}&exportType="+exportType;
+				window.location.href= appPath + "/dataExport.action?taskId=${taskId}&exportType="+exportType;
 			}
 
 		});

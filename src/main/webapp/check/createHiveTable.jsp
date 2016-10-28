@@ -29,7 +29,7 @@
             var newDept_action = new Ext.Action({
                 cls: 'x-btn-text-icon bmenu',
 //                icon: 'icon-add',
-                text: '添加新的一列++',
+                text: '添加列',
                 handler: function(){
                     id = id + 1;
                     c_index=c_index+1;
@@ -145,13 +145,13 @@
                         border: false,
                         items: [{
                             //为空
-                            blankText: '表的名称',
+                            blankText: '表名',
                             emptyText: '',
                             editable: false,
                             triggerAction: 'all',
                             allowBlank: false,
                             xtype: 'textfield',
-                            fieldLabel: '表的名称',
+                            fieldLabel: '表名',
                             id: 'org_field_tableName',
                             anchor: '90%'
                         }]
@@ -231,9 +231,9 @@
                             name: 'model_type',
                             width: 80,  //宽度220
                             columns: 1,  //在上面定义的宽度上展示3列
-                            fieldLabel: '分区字段',
+                            fieldLabel: '是否为分区字段',
                             items: [
-                                {boxLabel: '是否选上', name: 'org_field_partName_' + c_index}
+                                {boxLabel: '', name: 'org_field_partName_' + c_index}
                             ]
                         }]
                     } //组件结束
