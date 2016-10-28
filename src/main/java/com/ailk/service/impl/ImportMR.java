@@ -484,7 +484,7 @@ public class ImportMR {
             usage("Wrong number of arguments: " + otherArgs.length);
             return;
         }
-        LOG.info("------------INDEXALGOCOLUMN:" +  conf.get(CommonConstants.INDEXALGOCOLUMN));
+//        LOG.info("------------INDEXALGOCOLUMN:" +  conf.get(CommonConstants.INDEXALGOCOLUMN));
         // Make sure columns are specified
         String columns = conf.get(CommonConstants.COLUMNS);
         if (columns == null) {

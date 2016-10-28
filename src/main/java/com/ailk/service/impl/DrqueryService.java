@@ -38,24 +38,25 @@ public class DrqueryService implements IQueryService{
 		if(StringUtils.isEmpty(restUri)){
 			throw new RuntimeException("DRQuery uri property '"+ restName +"' is not set, please check the property  in the file 'runtime.properties'.");
 		}
-		log.info("request uri: " + restUri + "query/common");
-		
-		int start = Integer.parseInt(vs.getString("start"));
-		int limit = Integer.parseInt(vs.getString("limit"));
-		
-		vs.put("pageIndex", start / limit + 1);
-		vs.put("pageSize", limit);
+
+//		int start = Integer.parseInt(vs.getString("start"));
+//		int limit = Integer.parseInt(vs.getString("limit"));
+//
+		vs.put("startIndex", vs.getString("start"));
+		vs.put("offset", vs.getString("limit"));
 		vs.remove("t");
 		vs.remove("start");
 		vs.remove("limit");
 		vs.remove("type");
 		vs.remove("restName");
-		if("HIS".equals(vs.get("impType"))){
-			vs.put("billMonth", vs.getString("thruDate").substring(0, 6));
-		} 
+//		if("HIS".equals(vs.get("impType"))){
+//			vs.put("billMonth", vs.getString("thruDate").substring(0, 6));
+//		}
+        String url = buildURL(restUri, vs);
+        log.info("request uri: " + url);
 		String returnData = null;
 		try {
-			returnData = RestUtil.postWithJson(restUri + "query/common", vs);
+			returnData = RestUtil.postWithJson(url, Collections.EMPTY_MAP);
 		} catch (IOException e) {
 			log.error(e);
 			throw new RuntimeException(e);
@@ -66,25 +67,40 @@ public class DrqueryService implements IQueryService{
 		dto.setSuccess(true); 
 		List<Map> list = new ArrayList<Map>();
 		if(StringUtils.isNotEmpty(returnData)){
-	    	JSONObject json=  JSONObject.fromObject(returnData);
+	    	JSONObject json =  JSONObject.fromObject(returnData);
 	        if("0".equals(json.getString("result"))){
-	        	if(!(json.get("replyDisInfo") instanceof net.sf.json.JSONNull)){
-		            JSONObject replyDisInfo = json.getJSONObject("replyDisInfo");
-		            JSONArray cdrDisplays = replyDisInfo.getJSONArray("cdrDisplays");
-		            for(int i = 0; i < cdrDisplays.size(); i++){
-		            	Map record = new LinkedHashMap();
-		            	JSONArray fields = cdrDisplays.getJSONArray(i);
-		            	for(int j = 0; j < fields.size(); j++){
-		            		JSONObject field = fields.getJSONObject(j);
-		            		record.put(field.getString("name"), field.getString("value"));
-		            	}
+	        	if(!(json.get("data") instanceof net.sf.json.JSONNull)){
+//		            JSONObject replyDisInfo = json.getJSONObject("replyDisInfo");
+//		            JSONArray cdrDisplays = replyDisInfo.getJSONArray("cdrDisplays");
+//		            for(int i = 0; i < cdrDisplays.size(); i++){
+//		            	Map record = new LinkedHashMap();
+//		            	JSONArray fields = cdrDisplays.getJSONArray(i);
+//		            	for(int j = 0; j < fields.size(); j++){
+//		            		JSONObject field = fields.getJSONObject(j);
+//		            		record.put(field.getString("name"), field.getString("value"));
+//		            	}
+//		            	list.add(record);
+//		            }
+//		            dto.setRecords(list);
+//		            dto.setTotalCount(json.getJSONObject("stats").getLong("totalCount"));
+//		            Map extInfo = new HashMap();
+//		            extInfo.put("sums", replyDisInfo.getJSONArray("sums"));
+//		            dto.setExtInfo(extInfo);
+                    JSONArray data = json.getJSONArray("data");
+                    for(int i = 0; i < data.size(); i++) {
+                        Map record = new LinkedHashMap();
+                        JSONObject fields = data.getJSONObject(i);
+                        Iterator it = fields.keys();
+                        while(it.hasNext()) {
+                            Object key = it.next();
+                            record.put(key, fields.get(key));
+                        }
 		            	list.add(record);
-		            }
-		            dto.setRecords(list);
-		            dto.setTotalCount(json.getJSONObject("stats").getLong("totalCount"));
-		            Map extInfo = new HashMap();
-		            extInfo.put("sums", replyDisInfo.getJSONArray("sums"));
-		            dto.setExtInfo(extInfo);
+                    }
+                    dto.setRecords(list);
+                    dto.setTotalCount(json.getJSONObject("pageInfo").getLong("totalCount"));
+                    dto.setHasPaged(true);
+                    dto.setSuccess(true);
 	        	}
 	        }else{
 	        	dto.setSuccess(false);
@@ -198,5 +214,17 @@ public class DrqueryService implements IQueryService{
 			return result;
 		}
 	}
+
+    public String buildURL(String baseURL, ValueSet vs) {
+        Iterator it = vs.keySet().iterator();
+        StringBuffer sb = new StringBuffer(baseURL).append("?");
+        while(it.hasNext()) {
+            Object key = it.next();
+            Object value = vs.get(key);
+            sb.append(key).append("=").append(value).append("&");
+        }
+        sb.deleteCharAt(sb.length() -1);
+        return sb.toString();
+    }
 
 }
