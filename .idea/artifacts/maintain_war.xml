@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" name="maintain:war">
     <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="maintain-1.0-SNAPSHOT.war">
+    <root id="archive" name="maintain-2.0.0-SNAPSHOT.war">
       <element id="artifact" artifact-name="maintain:war exploded" />
     </root>
   </artifact>
