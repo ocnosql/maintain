@@ -4,7 +4,7 @@
   <groupId>com.ai.ocnosql</groupId>
   <artifactId>maintain</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-guangxi</version>
   <name>maintain Maven Webapp</name>
 
   <repositories>
