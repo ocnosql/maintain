@@ -55,9 +55,19 @@ public class ImportDao extends BaseDao{
     }
 
     public void log(ImportLog importLog) {
-        String sql = "insert into importLog(id, tablex, schemax, status, importdate, input, output) values(?,?,?,?,?,?,?)";
-        Object[] params = {importLog.getId(), importLog.getTablex(), importLog.getSchemax(), importLog.getStatus(), importLog.getImportdate(), importLog.getInput()
-        , importLog.getOutput()};
+        String sql = "insert into importLog(id, tablex, schemax, status, final_status, importdate, input, output, mr_status, completebulkload_status) values(?,?,?,?,?,?,?,?,?,?)";
+        Object[] params = {
+                importLog.getId(),
+                importLog.getTablex(),
+                importLog.getSchemax(),
+                importLog.getStatus(),
+                importLog.getFinalStatus(),
+                importLog.getImportdate(),
+                importLog.getInput(),
+                importLog.getOutput(),
+                importLog.getMrStatus(),
+                importLog.getCompleteBulkloadStatus()
+        };
         super.executeUpdate(sql, params);
     }
 
@@ -76,9 +86,33 @@ public class ImportDao extends BaseDao{
         return super.query(sql.toString());
     }
 
-    public void updateCounter(String id, String status, String total , String success_total, String fail_total) {
-        String sql = "update importLog set total = ? , success_total = ? , fail_total = ? , status = ? where id = ?";
-        Object[] params = {total, success_total, fail_total, status, id};
+    public void updateCounter(String id, String status, String final_status, String total , String success_total, String fail_total) {
+        String sql = "update importLog set  total = ? , success_total = ? , fail_total = ? , status = ? , final_status =?, mr_status=?, completebulkload_status = ? where id = ?";
+        Object[] params = {total, success_total, fail_total, status, final_status, id};
+        super.executeUpdate(sql, params);
+    }
+
+    public void updateCounter(String id, String status, String final_status, String mr_status, String completebkl_status, String total , String success_total, String fail_total) {
+        String sql = "update importLog set  total = ? , success_total = ? , fail_total = ? , status = ? , final_status =?, mr_status=?, completebulkload_status = ? where id = ?";
+        Object[] params = {total, success_total, fail_total, status, final_status, mr_status, completebkl_status, id};
+        super.executeUpdate(sql, params);
+    }
+
+    public void updateMRJobStatus(String id, String jobId, String mr_phase_status) {
+        String sql = "update importLog set job_id = ?, mr_status = ?  where id = ?";
+        Object[] params = {jobId, mr_phase_status, id};
+        super.executeUpdate(sql, params);
+    }
+
+    public void updateMRJobStatus(String id, String mr_phase_status) {
+        String sql = "update importLog set mr_status = ?  where id = ?";
+        Object[] params = {mr_phase_status, id};
+        super.executeUpdate(sql, params);
+    }
+
+    public void updateCompletebulkloadStatus(String id, String completebulkload_phase_status) {
+        String sql = "update importLog set completebulkload_status = ?  where id = ?";
+        Object[] params = {completebulkload_phase_status, id};
         super.executeUpdate(sql, params);
     }
 }

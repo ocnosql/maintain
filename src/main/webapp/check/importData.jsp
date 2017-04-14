@@ -18,10 +18,10 @@
                         var obj = Ext.util.JSON.decode(req.responseText);
                         Ext.getCmp("cname").setValue(obj[0].cname);
                         Ext.getCmp("separator").setValue(obj[0].separatorx);
-                        Ext.getCmp("loadType").setValue(obj[0].loadType);
                         Ext.getCmp("rowkey").setValue(obj[0].rowkey);
                         Ext.getCmp("generator").setValue(obj[0].generator);
                         Ext.getCmp("algocolumn").setValue(obj[0].algocolumn);
+                        Ext.getCmp("callback").setValue(obj[0].callback);
                     }
                 });
             }
@@ -44,6 +44,7 @@
                     */
                 });
                 Ext.Msg.alert('提示', '导入任务已提交!');
+                dynamicGrid.store.load();
             }
 
             var pageSize = 100;
@@ -157,7 +158,6 @@
                                         Ext.getCmp("config").setValue(null);
                                         Ext.getCmp("cname").setValue(null);
                                         Ext.getCmp("separator").setValue(null);
-                                        Ext.getCmp("loadType").setValue(null);
                                         Ext.getCmp("rowkey").setValue(null);
                                         Ext.getCmp("generator").setValue(null);
                                         Ext.getCmp("algocolumn").setValue(null);
@@ -221,7 +221,7 @@
                                 disabled: true,
                                 typeAhead: true
                             }]
-                        }, {
+                        }, /*{
                             items: [{
                                 xtype: 'textfield',
                                 fieldLabel: '加载类型',
@@ -232,7 +232,7 @@
                                 anchor: '90%',
                                 typeAhead: true
                             }]
-                        },
+                        },*/
                         {
                             items: [{
                                 xtype: 'textfield',
@@ -242,7 +242,7 @@
                                 name: 'rowkey',
                                 id: 'rowkey',
                                 anchor: '90%',
-                                mode: 'local'
+//                                mode: 'local'
                             }]
                         },
                         {
@@ -268,7 +268,20 @@
                                 id: 'algocolumn',
                                 disabled: 'true',
                                 anchor: '90%',
-                                mode: 'local',
+//                                mode: 'local',
+                                editable: false
+                            }]
+                        },
+                        {
+                            items: [{
+                                xtype: 'textfield',
+                                enableKeyEvents: true,
+                                fieldLabel: 'callback',
+                                name: 'callback',
+                                id: 'callback',
+                                disabled: 'true',
+                                anchor: '90%',
+//                                mode: 'local',
                                 editable: false
                             }]
                         },
@@ -287,7 +300,7 @@
                 }
                 ],
                 buttons: [{
-                    text: '刷新导入历史',
+                    text: '查询',
                     cls: 'x-icon-btn',
                     id: 'refresh',
                     handler: function () {

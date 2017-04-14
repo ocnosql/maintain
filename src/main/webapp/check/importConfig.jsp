@@ -390,6 +390,8 @@
                 Ext.getCmp('separator').setDisabled(result);
                 Ext.getCmp('generator').setDisabled(result);
                 Ext.getCmp('algocolumn').setDisabled(result);
+                Ext.getCmp('callback').setDisabled(result);
+
                 // Ext.getCmp('inputPath').setDisabled(result);
              // Ext.getCmp('outputPath').setDisabled(result);
             }

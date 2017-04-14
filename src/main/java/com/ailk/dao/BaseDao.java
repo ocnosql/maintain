@@ -87,7 +87,7 @@ public class BaseDao {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> query(String sql){
-		log.info("execute query : " + sql);
+//		log.info("execute query : " + sql);
 		Pool pool = PoolManager.getPool(poolName);
 		Connection conn = null;
 		Statement stmt = null;

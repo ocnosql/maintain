@@ -1,0 +1,395 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<property>
+  <name>mapreduce.framework.name</name>
+  <value>yarn</value>
+</property>
+<property>
+  <name>mapreduce.job.counters.counter.name.max</name>
+  <value>1000</value>
+</property>
+<!--<property>
+  <name>mapreduce.shuffle.port</name>
+  <value>8080</value>
+</property>-->
+
+<property>
+  <name>mapreduce.jobhistory.address</name>
+  <value>0.0.0.0:10020</value>
+</property>
+
+<property>
+  <name>mapreduce.jobhistory.webapp.address</name>
+  <value>0.0.0.0:19888</value>
+</property>
+
+<property>
+ <name>mapreduce.job.counters.limit</name>
+  <value>180</value>
+  <description>Limit on the number of user counters allowed per job.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.jvm.numtasks</name>
+  <value>-1</value>
+  <description>How many tasks to run per jvm. If set to -1, there is
+  no limit. 
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.ubertask.enable</name>
+  <value>false</value>
+  <description>Whether to enable the small-jobs "ubertask" optimization,
+  which runs "sufficiently small" jobs sequentially within a single JVM.
+  "Small" is defined by the following maxmaps, maxreduces, and maxbytes
+  settings.  Users may override this value.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.ubertask.maxmaps</name>
+  <value>9</value>
+  <description>Threshold for number of maps, beyond which job is considered
+  too big for the ubertasking optimization.  Users may override this value,
+  but only downward.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.ubertask.maxreduces</name>
+  <value>1</value>
+  <description>Threshold for number of reduces, beyond which job is considered
+  too big for the ubertasking optimization.  CURRENTLY THE CODE CANNOT SUPPORT
+  MORE THAN ONE REDUCE and will ignore larger values.  (Zero is a valid max,
+  however.)  Users may override this value, but only downward.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.ubertask.maxbytes</name>
+  <value>67108864</value>
+  <description>Threshold for number of input bytes, beyond which job is
+  considered too big for the ubertasking optimization.  If no value is
+  specified, dfs.block.size is used as a default.  Be sure to specify a
+  default value in mapred-site.xml if the underlying filesystem is not HDFS.
+  Users may override this value, but only downward.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.input.fileinputformat.split.minsize</name>
+  <value>128000000</value>
+  <description>The minimum size chunk that map input should be split
+  into.  Note that some file formats may have minimum split sizes that
+  take priority over this setting.</description>
+</property>
+
+<property>
+  <name>mapreduce.task.io.sort.factor</name>
+  <value>30</value>
+  <description>The number of streams to merge at once while sorting
+  files.  This determines the number of open file handles.</description>
+</property>
+
+<property>
+  <name>mapreduce.task.io.sort.mb</name>
+  <value>192</value>
+  <description>The total amount of buffer memory to use while sorting 
+  files, in megabytes.  By default, gives each merge stream 1MB, which
+  should minimize seeks.</description>
+</property>
+
+<property>
+  <name>mapred.child.java.opts</name>
+  <value>-Xmx512m</value>
+  <description>Java opts for the task tracker child processes.  
+  The following symbol, if present, will be interpolated: @taskid@ is replaced 
+  by current TaskID. Any other occurrences of '@' will go unchanged.
+  For example, to enable verbose gc logging to a file named for the taskid in
+  /tmp and to set the heap maximum to be a gigabyte, pass a 'value' of:
+        -Xmx1024m -verbose:gc -Xloggc:/tmp/@taskid@.gc
+  
+  Usage of -Djava.library.path can cause programs to no longer function if
+  hadoop native libraries are used. These values should instead be set as part 
+  of LD_LIBRARY_PATH in the map / reduce JVM env using the mapreduce.map.env and 
+  mapreduce.reduce.env config settings. 
+  </description>
+</property>
+
+
+<property>
+  <name>mapreduce.map.java.opts</name>
+  <value>-server -Xms1280m -Xmx1280m -XX:NewSize=1024m -XX:MaxNewSize=1024m -XX:PermSize=32m -XX:MaxPermSize=32m -XX:ParallelGCThreads=2</value>
+  <!-- <value>-server -Xms1024m -Xmx1024m -XX:NewSize=640m -XX:MaxNewSize=640m -XX:PermSize=32m -XX:MaxPermSize=32m -XX:ParallelGCThreads=2 -XX:+PrintHeapAtGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintGCApplicationStoppedTime -verbose:gc -Xloggc:/data1/ochadoop/loggc/map_@taskid@_gc.log</value> -->
+</property>
+
+<!--
+<property>
+  <name>mapreduce.reduce.java.opts</name>
+  <value>-server -Xms1800m -Xmx1800m -XX:PermSize=32m -XX:MaxPermSize=32m -XX:+DisableExplicitGC -XX:ParallelGCThreads=4 -XX:ConcGCThreads=1 -XX:+PrintPromotionFailure -XX:GCPauseIntervalMillis=200 -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:InitiatingHeapOccupancyPercent=45 -XX:G1HeapRegionSize=10 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/data1/ochadoop/loggc/taskid_@taskid@.hprof -XX:+PrintHeapAtGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationStoppedTime -verbose:gc -Xloggc:/data1/ochadoop/loggc/red_@taskid@_gc.log</value>
+</property>-->
+
+<property>
+  <name>mapreduce.map.memory.mb</name>
+  <value>512</value>
+  <description></description>
+</property>
+
+<property>
+  <name>mapreduce.map.cpu.vcores</name>
+  <value>1</value>
+  <description>
+      The number of virtual cores required for each map task.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.reduce.memory.mb</name>
+  <value>512</value>
+  <description></description>
+</property>
+
+<property>
+  <name>mapreduce.reduce.cpu.vcores</name>
+  <value>1</value>
+  <description>
+      The number of virtual cores required for each reduce task.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.reduces</name>
+  <value>1</value>
+  <description>The default number of reduce tasks per job. Typically set to 99%
+  of the cluster's reduce capacity, so that if a node fails the reduces can 
+  still be executed in a single wave.
+  Ignored when mapreduce.jobtracker.address is "local".
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.reduce.slowstart.completedmaps</name>
+  <value>0.75</value>
+  <description>Fraction of the number of maps in the job which should be 
+  complete before reduces are scheduled for the job. 
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.reduce.shuffle.parallelcopies</name>
+  <value>50</value>
+  <description>The default number of parallel transfers run by reduce
+  during the copy(shuffle) phase.
+  </description>
+</property>
+
+<!-- no compress for DFSIO -->
+<property>
+  <name>mapreduce.output.fileoutputformat.compress</name>
+  <value>false</value>
+  <description>Should the job outputs be compressed?
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.output.fileoutputformat.compress.type</name>
+  <value>BLOCK</value>
+  <description>If the job outputs are to compressed as SequenceFiles, how should
+               they be compressed? Should be one of NONE, RECORD or BLOCK.
+  </description>
+</property>
+
+<!--<property>
+  <name>mapreduce.output.fileoutputformat.compress.codec</name>
+  <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+  <description>If the job outputs are compressed, how should they be compressed?
+  </description>
+</property>-->
+
+<property>
+  <name>mapreduce.map.output.compress</name>
+  <value>false</value>
+  <description>Should the outputs of the maps be compressed before being
+               sent across the network. Uses SequenceFile compression.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.map.output.compress.codec</name>
+  <!-- <value>com.hadoop.compression.lzo.LzopCodec</value> -->
+  <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+  <description>If the map outputs are compressed, how should they be 
+               compressed?
+  </description>
+</property>
+
+<property>
+  <name>yarn.app.mapreduce.am.resource.mb</name>
+  <value>1024</value>
+  <description>The amount of memory the MR AppMaster needs.</description>
+</property>
+
+<property>
+  <name>mapreduce.task.userlog.limit.kb</name>
+  <value>65536</value>
+  <description>The maximum size of user-logs of each task in KB. 0 disables the cap.
+  </description>
+</property>
+
+<property>
+  <name>yarn.app.mapreduce.am.container.log.limit.kb</name>
+  <value>32768</value>
+  <description>The maximum size of the MRAppMaster attempt container logs in KB.
+    0 disables the cap.
+  </description>
+</property>
+
+<property>
+  <name>yarn.app.mapreduce.task.container.log.backups</name>
+  <value>1</value>
+  <description>Number of backup files for task logs when using
+    ContainerRollingLogAppender (CRLA). See
+    org.apache.log4j.RollingFileAppender.maxBackupIndex. By default,
+    ContainerLogAppender (CLA) is used, and container logs are not rolled. CRLA
+    is enabled for tasks when both mapreduce.task.userlog.limit.kb and
+    yarn.app.mapreduce.task.container.log.backups are greater than zero.
+  </description>
+</property>
+
+<property>
+  <name>yarn.app.mapreduce.am.container.log.backups</name>
+  <value>1</value>
+  <description>Number of backup files for the ApplicationMaster logs when using
+    ContainerRollingLogAppender (CRLA). See
+    org.apache.log4j.RollingFileAppender.maxBackupIndex. By default,
+    ContainerLogAppender (CLA) is used, and container logs are not rolled. CRLA
+    is enabled for the ApplicationMaster when both
+    mapreduce.task.userlog.limit.kb and
+    yarn.app.mapreduce.am.container.log.backups are greater than zero.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.job.userlog.retain.hours</name>
+  <value>72</value>
+  <description>The maximum time, in hours, for which the user-logs are to be 
+               retained after the job completion.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.map.maxattempts</name>
+  <value>6</value>
+  <description>Expert: The maximum number of attempts per map task.
+  In other words, framework will try to execute a map task these many number
+  of times before giving up on it.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.reduce.maxattempts</name>
+  <value>6</value>
+  <description>Expert: The maximum number of attempts per reduce task.
+  In other words, framework will try to execute a reduce task these many number
+  of times before giving up on it.
+  </description>
+</property>
+
+<property>
+  <name>mapreduce.map.speculative</name>
+  <value>false</value>
+  <description>If true, then multiple instances of some map tasks 
+               may be executed in parallel.</description>
+</property>
+
+<property>
+  <name>mapreduce.reduce.speculative</name>
+  <value>false</value>
+  <description>If true, then multiple instances of some reduce tasks 
+               may be executed in parallel.</description>
+</property>
+
+<property>
+  <name>mapreduce.admin.user.env</name>
+  <value>LD_LIBRARY_PATH=${HADOOP_COMMON_HOME}/lib/native:${HADOOP_COMMON_HOME}/lib/native/Linux-amd64-64:/usr/local/lib:/usr/lib:/usr/lib64:${JAVA_HOME}/jre/lib/amd64:${JAVA_HOME}/jre/lib/amd64/server:${LD_LIBRARY_PATH}</value>
+  <description>
+  Expert: Additional execution environment entries for 
+  map and reduce task processes. This is not an additive property.
+  You must preserve the original value if you want your map and
+  reduce tasks to have access to native libraries (compression, etc). 
+  When this value is empty, the command to set execution 
+  envrionment will be OS dependent: 
+  For linux, use LD_LIBRARY_PATH=$HADOOP_COMMON_HOME/lib/native.
+  For windows, use PATH = %PATH%;%HADOOP_COMMON_HOME%\\bin.
+  </description>
+</property>
+
+<!-- DFSIO -->
+<!--
+<property>
+  <name>test.io.compression.class</name>
+  <value>org.apache.hadoop.io.compress.GzipCodec</value>
+  <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+</property>
+-->
+
+<property>
+  <name>yarn.app.mapreduce.am.staging-dir</name>
+  <value>/tmp/hadoop-yarn/staging</value>
+  <description>The staging dir used while submitting jobs.
+  </description>
+</property>
+
+<!-- jobhistory properties -->
+
+<property>
+  <name>mapreduce.jobhistory.address</name>
+  <value>0.0.0.0:10020</value>
+  <description>MapReduce JobHistory Server IPC host:port</description>
+</property>
+
+<property>
+  <name>mapreduce.jobhistory.webapp.address</name>
+  <value>0.0.0.0:19888</value>
+  <description>MapReduce JobHistory Server Web UI host:port</description>
+</property>
+
+<property>
+  <name>mapreduce.jobhistory.intermediate-done-dir</name>
+  <value>${yarn.app.mapreduce.am.staging-dir}/history/done_intermediate</value>
+  <description></description>
+</property>
+
+<property>
+  <name>mapreduce.jobhistory.done-dir</name>
+  <value>${yarn.app.mapreduce.am.staging-dir}/history/done</value>
+  <description></description>
+</property>
+
+<property>
+  <name>mapreduce.job.user.classpath.first</name>
+  <value>true</value>
+  <description></description>
+</property>
+
+</configuration>

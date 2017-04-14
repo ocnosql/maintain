@@ -42,12 +42,16 @@ public class ResultBuild {
 	}
 	
 	public static String buildResult(List<Map> records){
+		return buildResult(records, null);
+	}
+
+	public static String buildResult(List<Map> records, Map<String, Integer> uiFeildLengthConfig) {
 		if(records == null){
 			records = new ArrayList<Map>();
 		}
 		Gson gs = new Gson();
-		return gs.toJson(buildResult(records.size() > 0 ? createFieldHeader(records.get(0)) : 
-			new String[0], records, records.size()));
+		return gs.toJson(buildResult(records.size() > 0 ? createFieldHeader(records.get(0)) :
+				new String[0], records, records.size(), uiFeildLengthConfig));
 	}
 
 	public static String buildResult2(List<Map> records,long totalCount){
@@ -83,9 +87,13 @@ public class ResultBuild {
 		}
 		return buildResult2(list, totalCount);
 	}
+
+	public static JsonResult buildResult(String[] fields, List<Map> records, long totalCount) {
+		return buildResult(fields, records, totalCount, null);
+	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static JsonResult buildResult(String[] fields, List<Map> records, long totalCount){
+	public static JsonResult buildResult(String[] fields, List<Map> records, long totalCount, Map<String, Integer> uiFeildLengthConfig){
 		JsonResult result = new JsonResult();
 		MetaData meta = new MetaData();
         Map<String, String> mapping = new LinkedHashMap<String, String>(fields.length);
@@ -120,7 +128,16 @@ public class ResultBuild {
 			//column.put("header", i + "_" + fld);
 			column.put("header", fld);
 			column.put("dataIndex", mapping.get(fld));
-			column.put("width", fld.length() < 15 ? 120 : fld.length() * 10);
+			if(uiFeildLengthConfig != null) {
+				Integer fieldLength = uiFeildLengthConfig.get(fld);
+				if(fieldLength != null && fieldLength > 0) {
+					column.put("width", fieldLength);
+				} else {
+					column.put("width", fld.length() < 15 ? 130 : fld.length() * 8);
+				}
+			} else {
+				column.put("width", fld.length() < 15 ? 130 : fld.length() * 8);
+			}
 			column.put("sortable", true);
 			result.getColumns().add(column);
 		}

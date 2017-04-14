@@ -29,7 +29,8 @@ public class QuerySchemTableService implements IQueryService {
         DataInfo info = Cache.get(gid);
 
         //String sql = "select * from QRY_INS_USER limit 100";
-        String sql = "select distinct column_name,data_type,nullable from system.catalog where table_name='"+vs.get("tablename")+"' and column_name is not null";
+//        String sql = "select distinct column_name,data_type,nullable from system.catalog where table_name='"+vs.get("tablename")+"' and column_name is not null";
+        String sql = "select * from system.catalog where table_name='"+vs.get("tablename")+"' and column_name is not null";
         try {
             if(info == null) {
                 HbaseJdbcHelper help = new PhoenixJdbcHelper();

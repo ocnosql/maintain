@@ -2,15 +2,24 @@ package com.ailk.service.impl;
 
 import com.ailk.dao.CommonDao;
 import com.ailk.dao.ImportDao;
+import com.ailk.job.JobTracker;
+import com.ailk.job.SubmitJob;
 import com.ailk.model.ImportConfig;
 import com.ailk.model.ImportLog;
 import com.ailk.model.ValueSet;
+import com.ailk.oci.ocnosql.common.util.CommonConstants;
 import com.ailk.oci.ocnosql.common.util.DateUtil;
+import com.ailk.oci.ocnosql.tools.load.ImportResult;
 import com.ailk.oci.ocnosql.tools.load.mutiple.MutipleColumnImportTsv;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.mapreduce.Job;
 
 import java.util.*;
 
 public class ImportService {
+
+    public static final Log LOG = LogFactory.getLog(ImportService.class);
 
     public List<String[]> queryConfigList(ValueSet vs) {
         String schema = vs.getString("schema");
@@ -24,7 +33,7 @@ public class ImportService {
                 HashMap m = (HashMap) map;
                 String[] data = {String.valueOf(m.get("id")), String.valueOf(m.get("cname")),String.valueOf(m.get("separatorx")), /*String.valueOf(m.get("loadType")), */
                          String.valueOf(m.get("rowkey")), String.valueOf(m.get("generator")),
-                        String.valueOf(m.get("algocolumn"))/*, String.valueOf(m.get("inputPath")), String.valueOf(m.get("outputPath")), */
+                        String.valueOf(m.get("algocolumn")), String.valueOf(m.get("callback"))/*String.valueOf(m.get("inputPath")), String.valueOf(m.get("outputPath")), */
                 };
                 datas.add(data);
             }
@@ -44,6 +53,7 @@ public class ImportService {
         String algocolumn = String.valueOf(vs.get("algocolumn"));
         String schema = String.valueOf(vs.get("schema"));
         String table = String.valueOf(vs.get("table"));
+        String callback = String.valueOf(vs.get("callback"));
         ImportDao importDao = new ImportDao("ocnosql");
         List<Map> map = importDao.queryIcBySchemaAndTable(schema, table, cname);
         if(map != null && map.size() > 0) {
@@ -58,7 +68,7 @@ public class ImportService {
         //importConfig.setInputPath(inputPath);
         importConfig.setRowkey(rowkey);
         importConfig.setGenerator(generator);
-        //importConfig.setOutputPath(outputPath);
+        importConfig.setCallback(callback);
         importConfig.setAlgocolumn(algocolumn);
         importConfig.setSchema(schema);
         importConfig.setTable(table);
@@ -86,6 +96,7 @@ public class ImportService {
        // importConfig.setInputPath(inputPath);
         importConfig.setRowkey(rowkey);
         importConfig.setGenerator(generator);
+        importConfig.setCallback(vs.getString("callback"));
         //importConfig.setOutputPath(outputPath);
         importConfig.setAlgocolumn(algocolumn);
         importConfig.setSchema(schema);
@@ -106,21 +117,24 @@ public class ImportService {
         return importDao.queryConfigById(id);
     }
 
-    public List<String[]> queryImportHistory(String schema, String table) {
+    public List<Map> queryJobList(String schema, String table) {
         ImportDao importDao = new ImportDao("ocnosql");
         List<Map> list = importDao.queryImportHistory(schema, table);
-        List<String[]> datas = new ArrayList<String[]>();
-        if(list != null) {
-            for(Map map : list) {
-                HashMap m = (HashMap) map;
-                String[] data = {String.valueOf(m.get("id")), String.valueOf(m.get("tablex")),String.valueOf(m.get("schemax")), /*String.valueOf(m.get("loadType")), */
-                        String.valueOf(m.get("status")), String.valueOf(m.get("importdate")),
-                        String.valueOf(m.get("input")),String.valueOf(m.get("output")), String.valueOf(m.get("total")), String.valueOf(m.get("success_total")), String.valueOf(m.get("fail_total"))
-                };
-                datas.add(data);
+        for(Map m : list) {
+            String jobId = String.valueOf(m.get("job_id"));
+            String status = String.valueOf(m.get("mr_status"));
+            String report = "";
+            if(SubmitJob.SUCCESS.equals(status) || SubmitJob.FAILED.equals(status))
+                report = "100%";
+            else if(SubmitJob.RUNNING.equals(status)) {
+                SubmitJob submitJob = JobTracker.getInstance().getJob(jobId);
+                if (submitJob != null) {
+                    report = submitJob.getReportProcess();
+                }
             }
+            m.put("mr_progress", report);
         }
-        return datas;
+        return list;
     }
 
     public List<Map> queryIcBySchemaAndTable(ValueSet vs) {
@@ -152,12 +166,11 @@ public class ImportService {
         List<Map> ic = importDao.queryIcBySchemaAndTable(schema, table, config);
         if(ic != null) {
             HashMap<String, String> mapx = (HashMap) ic.get(0);
-            //String loadType = mapx.get("loadType");
             String rowkeycolumn = "-Dimporttsv.rowkeycolumn=" + mapx.get("rowkey");
             String rowkeyGenerator = "-Dimporttsv.rowkeyGenerator=" + mapx.get("generator");
             String algocolumn = "-Dimporttsv.algocolumn=" + mapx.get("algocolumn");
             String outputPath = "-Dimporttsv.bulk.output=/" + now;
-            //com.ailk.oci.ocnosql.common.rowkeygenerator.GenRKCallBackDefaultImpl
+            String seperator = "-D" + CommonConstants.SEPARATOR + "=" + mapx.get("separatorx");
             String callback = "-Dimporttsv.callback=" + mapx.get("callback");
             String columns = "-Dimporttsv.columns=";
             CommonDao commonDao = new CommonDao();
@@ -179,15 +192,19 @@ public class ImportService {
             //写入日志
             ImportLog importLog = new ImportLog();
             importLog.setId(now);
+            importLog.setStatus(SubmitJob.PREPARE);
             importLog.setImportdate(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
             importLog.setInput(inputPath);
             importLog.setOutput(outputPath);
             importLog.setSchemax(schema);
             importLog.setTablex(table);
-            importLog.setStatus("导入中");
+            importLog.setStatus(SubmitJob.RUNNING);
+            importLog.setFinalStatus(SubmitJob.UNFINISHED);
+            importLog.setMrStatus(SubmitJob.PREPARE);
+            importLog.setCompleteBulkloadStatus(SubmitJob.PREPARE);
             importDao.log(importLog);
 
-            String[] args = {now, callback, "-Dimporttsv.bulk.erroroutput=true", columns, outputPath, rowkeycolumn, algocolumn, rowkeyGenerator,table, inputPath};
+            String[] args = {seperator, callback, "-Dimporttsv.bulk.erroroutput=true", columns, outputPath, rowkeycolumn, algocolumn, rowkeyGenerator, table, inputPath};
             new Thread(new runImport(args, now)).start();
         }
         return result;
@@ -203,13 +220,66 @@ public class ImportService {
 
         @Override
         public void run() {
+            final SubmitJob submitJob = new SubmitJob();
+            final String id = logId;
             try {
-                ImportMR.main(args);
-                //importDao.updateLogStatus("导入成功", logId);
+                final ImportDao importDao = new ImportDao("ocnosql");
+                List<ImportResult> importResults = MutipleColumnImportTsv.run(args, new MutipleColumnImportTsv.Callback() {
+
+                    @Override
+                    public void submitMapReduceCallback(Job job) {
+                        try {
+                            submitJob.setJob(job);
+                            JobTracker.getInstance().addJob(submitJob);
+                            importDao.updateMRJobStatus(id, job.getJobID().toString(), SubmitJob.RUNNING);
+                        } catch (Throwable e) {
+                            LOG.error("Update Running Job Status Failed", e);
+                        }
+                    }
+
+                    @Override
+                    public void finishMapReduceCallback(boolean isSuccess) {
+                        try {
+                            importDao.updateMRJobStatus(id, isSuccess ? SubmitJob.SUCCESS : SubmitJob.FAILED);
+                        } catch (Throwable e) {
+                            LOG.error("Update MR Job Status Failed", e);
+                        }
+                    }
+
+                    @Override
+                    public void startCompletebulkloadCallback() {
+                        try {
+                            importDao.updateCompletebulkloadStatus(id, SubmitJob.RUNNING);
+                        } catch (Throwable e) {
+                            LOG.error("Update Completebulkload Status Failed", e);
+                        }
+
+                    }
+
+                    @Override
+                    public void finishCompletebulkloadCallback(boolean isSuccess) {
+                        try {
+                            importDao.updateCompletebulkloadStatus(id, isSuccess ? SubmitJob.SUCCESS : SubmitJob.FAILED);
+                        } catch (Throwable e) {
+                            LOG.error("Update Completebulkload Status Failed", e);
+                        }
+
+                    }
+                });
+                for(ImportResult result : importResults) {
+                    importDao.updateCounter(logId + "", SubmitJob.FINISHED, result.isSuccess() ? SubmitJob.SUCCESS: SubmitJob.FAILED,
+                            result.getMrStatus(), result.getCompleteBulkloadStatus(),
+                            result.getInputLine() + "", result.getOutputLine() + "", result.getBadLine() + "");
+                    break;
+                }
+
+
             } catch (Exception e) {
                 ImportDao importDao = new ImportDao("ocnosql");
-                importDao.updateCounter(logId, "导入失败", "0", "0", "0");
-                e.printStackTrace();
+                importDao.updateCounter(logId, SubmitJob.FINISHED, SubmitJob.FAILED,"0", "0", "0");
+                LOG.error("bulkload exception", e);
+            } finally {
+                JobTracker.getInstance().removeJob(submitJob.getJobId());
             }
         }
     }

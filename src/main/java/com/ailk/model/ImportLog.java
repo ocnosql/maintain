@@ -14,6 +14,9 @@ public class ImportLog {
     private String total;
     private String success_total;
     private String fail_total;
+    private String finalStatus;
+    private String mrStatus;
+    private String completeBulkloadStatus;
 
     public String getId() {
         return id;
@@ -93,5 +96,29 @@ public class ImportLog {
 
     public void setFail_total(String fail_total) {
         this.fail_total = fail_total;
+    }
+
+    public String getFinalStatus() {
+        return finalStatus;
+    }
+
+    public void setFinalStatus(String finalStatus) {
+        this.finalStatus = finalStatus;
+    }
+
+    public String getMrStatus() {
+        return mrStatus;
+    }
+
+    public void setMrStatus(String mrStatus) {
+        this.mrStatus = mrStatus;
+    }
+
+    public String getCompleteBulkloadStatus() {
+        return completeBulkloadStatus;
+    }
+
+    public void setCompleteBulkloadStatus(String completeBulkloadStatus) {
+        this.completeBulkloadStatus = completeBulkloadStatus;
     }
 }

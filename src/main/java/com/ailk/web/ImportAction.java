@@ -18,6 +18,7 @@ import java.util.Map;
 public class ImportAction extends BaseAction {
 
     public static final Log LOG = LogFactory.getLog(ImportAction.class);
+    private Gson gs = new Gson();
 
     public String queryConfigList() {
         ValueSet vs = new ValueSet();
@@ -31,7 +32,7 @@ public class ImportAction extends BaseAction {
 
         Map<String, String[]> fields = new HashMap<String, String[]>();
         Map<String, List> testData2 = new HashMap<String, List>();
-        fields.put("configList", new String[]{"id", "配置名称", "分隔符", "rowkey", "generator", "algocolumn"});
+        fields.put("configList", new String[]{"id", "配置名称", "分隔符", "rowkey", "generator", "algocolumn", "callback"});
         testData2.put("configList", datas);
         this.setAjaxStr(ResultBuild.buildJson(fields.get("configList"), testData2.get("configList")));
         return AJAXRTN;
@@ -118,35 +119,42 @@ public class ImportAction extends BaseAction {
     }
 
     public String importData() throws Exception {
-        ValueSet vs = new ValueSet();
-        bindParams(vs, ServletActionContext.getRequest());
-        ImportService service = new ImportService();
-        service.importData(vs);
-        Gson gs = new Gson();
-        HashMap<String, Object> json = new HashMap<String, Object>();
-        json.put("success", true);
-        this.setAjaxStr(gs.toJson(json));
+        try {
+            ValueSet vs = new ValueSet();
+            bindParams(vs, ServletActionContext.getRequest());
+            ImportService service = new ImportService();
+            service.importData(vs);
+            Gson gs = new Gson();
+            HashMap<String, Object> json = new HashMap<String, Object>();
+            json.put("success", true);
+            this.setAjaxStr(gs.toJson(json));
+        } catch(Throwable ex){
+            LOG.error("import data exception", ex);
+            this.setAjaxStr(gs.toJson(ResultBuild.buildFailed(ex)));
+        }
         return AJAXRTN;
     }
 
     public String queryImportHistory() {
-        ValueSet vs = new ValueSet();
-        bindParams(vs, ServletActionContext.getRequest());
-        String table_space = String.valueOf(vs.get("table_space"));
-        String tables = String.valueOf(vs.get("tables"));
-        ImportService service = new ImportService();
-        List<String[]> results = service.queryImportHistory(table_space, tables);
-       // HashMap<String, Object> json = new HashMap<String, Object>();
-       // json.put("root", results);
-       // Gson gs = new Gson();
-       // this.setAjaxStr(gs.toJson(json));
+        try {
+            ValueSet vs = new ValueSet();
+            bindParams(vs, ServletActionContext.getRequest());
+            String table_space = String.valueOf(vs.get("table_space"));
+            String tables = String.valueOf(vs.get("tables"));
+            ImportService service = new ImportService();
 
-
-        Map<String, String[]> fields = new HashMap<String, String[]>();
-        Map<String, List> testData2 = new HashMap<String, List>();
-        fields.put("configHistory", new String[]{"id", "表名", "表空间", "状态", "导入时间", "输入路径", "输出路径", "导入数据总量","成功数据量", "失败数据量"});
-        testData2.put("configHistory", results);
-        this.setAjaxStr(ResultBuild.buildJson(fields.get("configHistory"), testData2.get("configHistory")));
+            Map<String, Integer> uiFeildLengthConfig = new HashMap<String, Integer>();
+            uiFeildLengthConfig.put("job_id", 160);
+            uiFeildLengthConfig.put("mr_progress", 140);
+            uiFeildLengthConfig.put("schemax", 80);
+            uiFeildLengthConfig.put("status", 80);
+            setAjaxStr(ResultBuild.buildResult(service.queryJobList(table_space, tables), uiFeildLengthConfig));
+        } catch(Throwable ex){
+            //ex.printStackTrace();
+            LOG.error("查询出现异常", ex);
+            //ResultBuild.buildFailed(ex);
+            this.setAjaxStr(gs.toJson(ResultBuild.buildFailed(ex)));
+        }
         return AJAXRTN;
     }
 }
