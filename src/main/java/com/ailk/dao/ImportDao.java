@@ -87,7 +87,7 @@ public class ImportDao extends BaseDao{
     }
 
     public void updateCounter(String id, String status, String final_status, String total , String success_total, String fail_total) {
-        String sql = "update importLog set  total = ? , success_total = ? , fail_total = ? , status = ? , final_status =?, mr_status=?, completebulkload_status = ? where id = ?";
+        String sql = "update importLog set  total = ? , success_total = ? , fail_total = ? , status = ? , final_status =? where id = ?";
         Object[] params = {total, success_total, fail_total, status, final_status, id};
         super.executeUpdate(sql, params);
     }

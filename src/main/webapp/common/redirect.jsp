@@ -20,9 +20,9 @@ if("1".equals(isAjaxRequest)){
 		var errorMsg = "会话失效，请重新登录！";
 		var isSessionTimeout = '1';
 		if(window.parent != null){
-			window.top.location.href = '<%=request.getContextPath()%>/login4A.jsp?isSessionTimeout='+isSessionTimeout;
+			window.top.location.href = '<%=request.getContextPath()%>/login.jsp?isSessionTimeout='+isSessionTimeout;
 		}else{
-			window.location.href = '<%=request.getContextPath()%>/login4A.jsp?isSessionTimeout='+isSessionTimeout;
+			window.location.href = '<%=request.getContextPath()%>/login.jsp?isSessionTimeout='+isSessionTimeout;
 		}
 	</script>
 <%}%>
