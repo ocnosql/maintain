@@ -53,12 +53,16 @@ CREATE TABLE `importconfig` (
 -- ----------------------------
 -- Table structure for importLog
 -- ----------------------------
-DROP TABLE IF EXISTS `importLog`;
 CREATE TABLE `importLog` (
   `id` varchar(18) NOT NULL,
+  `job_id` varchar(50) DEFAULT NULL,
   `tablex` varchar(100) DEFAULT NULL,
   `schemax` varchar(100) DEFAULT NULL,
   `status` varchar(20) DEFAULT NULL,
+  `final_status` varchar(20) DEFAULT NULL,
+  `mr_progress` varchar(20) DEFAULT NULL,
+  `mr_status` varchar(20) DEFAULT NULL,
+  `completebulkload_status` varchar(20) DEFAULT NULL,
   `importdate` varchar(255) DEFAULT NULL,
   `input` varchar(500) DEFAULT NULL,
   `output` varchar(500) DEFAULT NULL,
@@ -168,6 +172,6 @@ CREATE TABLE `user` (
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'admin', 'admin', '1');
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`maintain`@`%` SQL SECURITY DEFINER VIEW `user_view` AS select `user`.`id` AS `id`,`user`.`name` AS `name`,`user`.`passwd` AS `passwd`,`user`.`is_enable` AS `is_enable`,`user`.`name` AS `user_name`,'0' AS `orgid`,'0' AS `email`,'0' AS `mobile`,'2000-01-01 00:00:00' AS `effect_time`,'2099-12-31 00:00:00' AS `expire_time`,'0' AS `acct_desc` from `user`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `user_view` AS select `user`.`id` AS `id`,`user`.`name` AS `name`,`user`.`passwd` AS `passwd`,`user`.`is_enable` AS `is_enable`,`user`.`name` AS `user_name`,'0' AS `orgid`,'0' AS `email`,'0' AS `mobile`,'2000-01-01 00:00:00' AS `effect_time`,'2099-12-31 00:00:00' AS `expire_time`,'0' AS `acct_desc` from `user`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`maintain`@`%` SQL SECURITY DEFINER VIEW `org_view` AS select '0' AS `id`,'广西移动公司' AS `name`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `org_view` AS select '0' AS `id`,'广西移动公司' AS `name`;

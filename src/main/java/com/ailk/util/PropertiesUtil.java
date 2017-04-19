@@ -1,5 +1,6 @@
 package com.ailk.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,8 +23,8 @@ public class PropertiesUtil {
 	@SuppressWarnings("static-access")
 	public static Properties getProperties(String resourceName) {
 		Properties props = propsCache.get(resourceName);
-		PropertiesUtil utilProperties = new PropertiesUtil();
 		if (props == null) {
+			PropertiesUtil utilProperties = new PropertiesUtil();
 			props = new Properties();
 			ClassLoader classLoader = getContextClassLoader();
 			InputStream in = null;
@@ -36,11 +37,19 @@ public class PropertiesUtil {
 					in = utilProperties.getClass().getResourceAsStream(
 							"/" + resourceName);
 					props.load(in);
-				} catch (Exception e1) {
-					logger.error(" Couldn't find the URL: " + resourceName,e1);
-					return props;
+				} catch (Exception ex) {
+					throw new RuntimeException(" Couldn't find the URL: " + resourceName, ex);
+				}
+			} finally {
+				if(in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						logger.error("close inputstream exception", e);
+					}
 				}
 			}
+			propsCache.put(resourceName, props);
 		}
 		return props;
 	}
